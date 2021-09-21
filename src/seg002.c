@@ -551,6 +551,7 @@ void __pascal far move_0_nothing() {
 
 // seg002:0721
 void __pascal far move_1_forward() {
+	is_guard_notice = 0;
 	control_x = -1;
 	control_forward = -1;
 }
@@ -739,9 +740,11 @@ void __pascal far autocontrol_guard_active() {
 				if ((Char.sword < sword_2_drawn && distance < 8) || distance < 12) {
 					if (Char.direction == Opp.direction) {
 						// turn around
+						is_guard_notice = 0;
 						move_2_backward();
 						//return;
 					} else {
+						is_guard_notice = 0;
 						move_1_forward();
 						//return;
 					}
@@ -916,7 +919,44 @@ void __pascal far hurt_by_sword() {
 	} else {
 		// You can't hurt skeletons
 		if (Char.charid != charid_4_skeleton) {
-			if (take_hp(1)) goto loc_4276;
+			// Guard hitting a critical hit probability CustomLogic
+			int random_take_hp = rand();
+			int hit_take_hp = 1;
+			if (hitp_max > 3)
+			{
+				if (random_take_hp%2 == 0)
+				{
+					hit_take_hp = 2;
+					if (Char.charid == charid_0_kid)
+					{
+						display_text_bottom("Critical Hit!");
+						text_time_total = 12;
+						text_time_remaining = 12;
+					}
+				}
+				else
+				{
+					hit_take_hp = 1;
+				}
+			}
+			if (Char.charid == charid_0_kid)
+			{
+				if (take_hp(hit_take_hp))
+				{
+					goto loc_4276;
+				}
+			}
+			else
+			{
+				if (current_level == 6 && curr_room == 12 && guardhp_curr == 1)
+				{
+					// Do nothing
+				}
+				else if (take_hp(1))
+				{
+					goto loc_4276;
+				}
+			}
 		}
 		seqtbl_offset_char(seq_74_hit_by_sword); // being hit with sword
 		Char.y = y_land[Char.curr_row + 1];

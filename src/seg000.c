@@ -566,6 +566,7 @@ int __pascal far process_key() {
 		case SDL_SCANCODE_A | WITH_CTRL: // ctrl-a
 			if (current_level != 15) {
 				stop_sounds();
+				guard_notice_timer = 28;
 				is_restart_level = 1;
 			}
 		break;
@@ -824,10 +825,16 @@ void __pascal far play_frame() {
 		}
 	} else if(current_level == /*6*/ custom->falling_exit_level) {
 		// Special event: level 6 falling exit
-		if (roomleave_result == -2) {
+		if (curr_room == 23)
+		{
 			Kid.y = -1;
 			stop_sounds();
 			++next_level;
+		}
+		if (roomleave_result == -2) {
+			/*Kid.y = -1;
+			stop_sounds();
+			++next_level;*/
 		}
 	} else if(/*current_level == 12*/ custom->tbl_seamless_exit[current_level] >= 0) {
 		// Special event: level 12 running exit
@@ -1357,8 +1364,8 @@ void __pascal far add_life() {
 	short hpmax = hitp_max;
 	++hpmax;
 	// CusPop: set maximum number of hitpoints (max_hitp_allowed, default = 10)
-//	if (hpmax > 10) hpmax = 10; // original
-	if (hpmax > custom->max_hitp_allowed) hpmax = custom->max_hitp_allowed;
+	if (hpmax > 15) hpmax = 15; // original
+//	if (hpmax > custom->max_hitp_allowed) hpmax = custom->max_hitp_allowed;
 	hitp_max = hpmax;
 	set_health_life();
 }
@@ -1688,9 +1695,6 @@ void __pascal far read_keyb_control() {
 		control_x = 1;
 	}
 	control_shift = -(key_states[SDL_SCANCODE_LSHIFT] || key_states[SDL_SCANCODE_RSHIFT]);
-#ifdef DRAW_SWORD_ANYWHERE
-	control_alt = -(key_states[SDL_SCANCODE_LALT] || key_states[SDL_SCANCODE_RALT]);
-#endif
 
 	#ifdef USE_DEBUG_CHEATS
 	if (cheats_enabled && debug_cheats_enabled) {

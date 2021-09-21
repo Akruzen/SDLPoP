@@ -625,7 +625,7 @@ void __pascal far draw_tile_anim() {
 		case tiles_2_spike:
 			ptr_add_table(id_chtab_6_environment, spikes_fram_left[get_spike_frame(curr_modifier)], draw_xh, 0, draw_main_y - 2, blitters_10h_transp, 0);
 			break;
-		case tiles_10_potion:
+		case tiles_10_potion: // CustomLogic
 			switch((curr_modifier & 0xF8) >> 3) {
 				case 0:
 					return; //empty
@@ -635,8 +635,38 @@ void __pascal far draw_tile_anim() {
 					break;
 				case 3: // slow fall
 				case 4: // upside down
-					color = 10; // green
-					// fallthrough!
+					if (current_level == 3 && (curr_room == 6 || curr_room == 4))
+					{
+						color = 14;
+					}
+					else if ((current_level == 3 && (curr_room == 12 || curr_room == 22)) ||
+						(current_level == 6 && (curr_room == 19 || curr_room == 12)) ||
+						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 1 || curr_room == 7)))
+					{
+						color = 11;
+					}
+					else if (current_level == 4)
+					{
+						color = 13;
+					}
+					else if (current_level == 6)
+					{
+						color = 8;
+					}
+					else
+					{
+						color = 10; // green
+						// fallthrough!
+					}
+					if (current_level == 6)
+					{
+						if (curr_room == 24)
+							move_spike_tile(24, 8, 6);
+						if (curr_room == 5)
+							move_spike_tile(5, 9, 3);
+						if (curr_room == 6)
+							move_spike_tile(6, 8, 3);
+					}
 				case 2: // life
 					pot_size = 1;
 					break;
@@ -661,6 +691,49 @@ void __pascal far draw_tile_anim() {
 const byte spikes_fram_fore[] = {0, 139, 140, 141, 142, 143, 142, 140, 139, 0};
 const byte chomper_fram_for[] = {106, 107, 108, 109, 110, 0};
 const byte wall_fram_main[] = {8, 10, 6, 4};
+
+//CustomLogic
+void move_spike_tile(int room, int column, int move_time)
+{
+	if (guard_notice_timer == 0)
+	{
+		if (get_tile(room, column, 2) == tiles_0_empty &&
+			get_tile(room, column, 1) == tiles_0_empty &&
+			get_tile(room, column, 0) == tiles_0_empty)
+		{
+			get_tile(room, column, 2);
+			curr_room_tiles[curr_tilepos] = tiles_2_spike;
+			guard_notice_timer = move_time;
+			need_full_redraw = 1;
+		}
+		else if (get_tile(room, column, 2) == tiles_2_spike)
+		{
+			get_tile(room, column, 2);
+			curr_room_tiles[curr_tilepos] = tiles_0_empty;
+			get_tile(room, column, 1);
+			curr_room_tiles[curr_tilepos] = tiles_2_spike;
+			guard_notice_timer = move_time;
+			need_full_redraw = 1;
+		}
+		else if (get_tile(room, column, 1) == tiles_2_spike)
+		{
+			get_tile(room, column, 1);
+			curr_room_tiles[curr_tilepos] = tiles_0_empty;
+			get_tile(room, column, 0);
+			curr_room_tiles[curr_tilepos] = tiles_2_spike;
+			guard_notice_timer = move_time;
+			need_full_redraw = 1;
+		}
+		else
+		{
+			get_tile(room, column, 0);
+			curr_room_tiles[curr_tilepos] = tiles_0_empty;
+			guard_notice_timer = move_time;
+			need_full_redraw = 1;
+		}
+
+	}
+}
 
 // seg008:0D15
 void __pascal far draw_tile_fore() {
@@ -1817,6 +1890,43 @@ void __pascal far show_level() {
 		text_time_remaining = text_time_total = 24;
 		snprintf(sprintf_temp, sizeof(sprintf_temp), "LEVEL %d", disp_level);
 		display_text_bottom(sprintf_temp);
+		switch (current_level) // CustomLogic
+		{
+			case 1:
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				display_text_bottom("1: THE SKILLED GUARD");
+				break;
+			case 2:
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				display_text_bottom("2: WATCH WHAT YOU DRINK");
+				break;
+			case 3:
+				display_text_bottom("3: WHAT IS DEAD MAY NEVER DIE");
+				enable_lighting = 1;
+				need_full_redraw = 1;
+				break;
+			case 4:
+				display_text_bottom("4: THE SHOWDOWN");
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
+			case 5:
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
+			case 6:
+				display_text_bottom("6: WHY IS EVERYTHING MOVING?");
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
+			case 7:
+				display_text_bottom("6: MATCHING AND CLIMBING");
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
+		}
 		is_show_time = 1;
 	}
 	seamless = 0;

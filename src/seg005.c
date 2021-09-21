@@ -35,7 +35,7 @@ void __pascal far seqtbl_offset_opp(int seq_index) {
 
 // seg005:0030
 void __pascal far do_fall() {
-	if (is_screaming == 0 && Char.fall_y >= 31) {
+	if (is_screaming == 0 && Char.fall_y >= 43) {
 		play_sound(sound_1_falling); // falling
 		is_screaming = 1;
 	}
@@ -180,9 +180,14 @@ void __pascal far land() {
 			} else if (Char.fall_y < 33) {
 				// fell 2 rows
 				if (Char.charid == charid_1_shadow) goto loc_5EFD;
-				if (Char.charid == charid_2_guard) goto loc_5F6C;
+				if (Char.charid >= charid_2_guard || Char.sword == sword_2_drawn) // goto loc_5F6C;
+				{
+					play_sound(sound_16_medium_land);
+					take_hp(1);
+					seq_id = seq_77_guard_stand_inactive;
+				}
 				// kid (or skeleton (bug!))
-				if (! take_hp(1)) {
+				else if (! take_hp(1)) {
 					// still alive
 					play_sound(sound_16_medium_land); // medium land
 					is_guard_notice = 1;
@@ -193,6 +198,8 @@ void __pascal far land() {
 				}
 			} else {
 				// fell 3 or more rows
+				play_sound(sound_1_falling); // falling
+		        is_screaming = 1;
 				goto loc_5F6C;
 			}
 		}
@@ -323,20 +330,17 @@ void __pascal far control_standing() {
 		return;
 	}
 
-#ifdef DRAW_SWORD_ANYWHERE
-	// Draw the sword anytime with Alt.
-	if (have_sword && Char.charid == charid_0_kid && control_alt)
+	// Draw the sword anytime with Ctrl.
+	if (have_sword && Char.charid == charid_0_kid && (key_states[SDL_SCANCODE_LCTRL] || key_states[SDL_SCANCODE_RCTRL]))
 	{
-		if (recording) special_move = MOVE_DRAW_SWORD;
 		draw_sword();
 		return;
 	}
-#endif
 
-	if (Char.charid != charid_0_kid && control_down < 0 && control_forward < 0) {
+	/*if (Char.charid != charid_0_kid && control_down < 0 && control_forward < 0) {
 		draw_sword();
 		return;
-	} //else
+	}*/ //else
 	if (have_sword) {
 		if (offguard != 0 && control_shift >= 0) goto loc_6213;
 		if (can_guard_see_kid >= 2) {
@@ -348,10 +352,10 @@ void __pascal far control_standing() {
 						(Opp.action == actions_3_in_midair || (Opp.frame >= frame_107_fall_land_1 && Opp.frame < 118))
 					) {
 						offguard = 0;
-					} else {
+					} /*else {
 						draw_sword();
 						return;
-					}
+					}*/
 				} else {
 					back_pressed();
 					return;
@@ -489,6 +493,7 @@ void __pascal far crouch() {
 void __pascal far back_pressed() {
 	word seq_id;
 	control_backward = release_arrows();
+	/*
 	// After turn, Kid will draw sword if ...
 	if (have_sword == 0 || // if Kid has sword
 		can_guard_see_kid < 2 || // and can see Guard
@@ -500,7 +505,8 @@ void __pascal far back_pressed() {
 		Char.sword = sword_2_drawn;
 		offguard = 0;
 		seq_id = seq_89_turn_draw_sword; // turn and draw sword
-	}
+	}*/
+	seq_id = seq_5_turn; // turn //this is extra line of code
 	seqtbl_offset_char(seq_id);
 }
 
@@ -928,7 +934,14 @@ void __pascal far swordfight() {
 				offguard = 1;
 				guard_refrac = 9;
 				holding_sword = 0;
-				seq_id = seq_93_put_sword_away_fast; // put sword away fast (down pressed)
+				if (current_level == 1 && curr_room == 8) //CustomLogic
+				{
+					seq_id = seq_93_put_sword_away_fast; // put sword away fast (down pressed)
+				}
+				else
+				{
+					seq_id = seq_92_put_sword_away; // put sword away
+				}
 			} else if (charid == charid_1_shadow) {
 				seq_id = seq_92_put_sword_away; // put sword away
 			} else {

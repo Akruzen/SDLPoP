@@ -286,7 +286,7 @@ void __pascal far animate_sword() {
 }
 
 // seg007:0448
-void __pascal far animate_chomper() {
+void __pascal far animate_chomper() { //CustomLogic
 	word blood;
 	word frame;
 	if (trob.type >= 0) {
@@ -298,6 +298,72 @@ void __pascal far animate_chomper() {
 		curr_modifier = blood | frame;
 		if (frame == 2) {
 			play_sound(sound_47_chomper); // chomper
+			// CustomLogic
+			int move_chomp_row = 0;
+			int mov_chomp_room = 2;
+			if (current_level == 5)
+			{
+				if (curr_room == 2)
+				{
+					move_chomp_row = 2;
+					mov_chomp_room = 2;
+				}
+				if (curr_room == 13)
+				{
+					move_chomp_row = 0;
+					mov_chomp_room = 13;
+				}
+				if (curr_room == 14)
+				{
+					move_chomp_row = 2;
+					mov_chomp_room = 14;
+				}
+				if (curr_room == 17)
+				{
+					if (char_top_row == 0 || char_top_row == -1)
+					{
+						move_chomp_row = 0;
+						mov_chomp_room = 17;
+					}
+					else
+					{
+						move_chomp_row = 2;
+						mov_chomp_room = 17;
+					}
+				}
+				if (get_tile(mov_chomp_room, 2, move_chomp_row) == tiles_14_debris)
+				{
+					treadmill(mov_chomp_room, 2, move_chomp_row);
+				}
+				else if (get_tile(mov_chomp_room, 3, move_chomp_row) == tiles_14_debris)
+				{
+					treadmill(mov_chomp_room, 3, move_chomp_row);
+				}
+				else if (get_tile(mov_chomp_room, 4, move_chomp_row) == tiles_14_debris)
+				{
+					treadmill(mov_chomp_room, 4, move_chomp_row);
+				}
+				else if (get_tile(mov_chomp_room, 5, move_chomp_row) == tiles_14_debris)
+				{
+					treadmill(mov_chomp_room, 5, move_chomp_row);
+				}
+				else if (get_tile(mov_chomp_room, 6, move_chomp_row) == tiles_14_debris)
+				{
+					treadmill(mov_chomp_room, 6, move_chomp_row);
+				}
+				else if (get_tile(mov_chomp_room, 8, move_chomp_row) == tiles_14_debris)
+				{
+					get_tile(mov_chomp_room, 7, move_chomp_row);
+					curr_room_tiles[curr_tilepos] = tiles_0_empty;
+					get_tile(mov_chomp_room, 8, move_chomp_row);
+					curr_room_tiles[curr_tilepos] = tiles_0_empty;
+					get_tile(mov_chomp_room, 2, move_chomp_row);
+					curr_room_tiles[curr_tilepos] = tiles_14_debris;
+					get_tile(mov_chomp_room, 3, move_chomp_row);
+					curr_room_tiles[curr_tilepos] = tiles_14_debris;
+					need_full_redraw = 1;
+				}
+			}
 		}
 		// If either:
 		// - Kid left this room
@@ -314,6 +380,17 @@ void __pascal far animate_chomper() {
 	if ((curr_modifier & 0x7F) < 6) {
 		redraw_at_trob();
 	}
+}
+
+//CustomLogic
+void treadmill(int room, int column, int row)
+{
+	get_tile(room, column, row);
+	curr_room_tiles[curr_tilepos] = tiles_0_empty;
+	get_tile(room, column + 2, row);
+	curr_room_tiles[curr_tilepos] = tiles_14_debris;
+	need_full_redraw = 1;
+//test
 }
 
 // seg007:04D3

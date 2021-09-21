@@ -452,10 +452,26 @@ void __pascal far chomped() {
 		Char.x = x_bump[tile_col + 5] + 7;
 		Char.x = char_dx_forward(7 - !Char.direction);
 		Char.y = y_land[Char.curr_row + 1];
-		take_hp(100);
-		play_sound(sound_46_chomped); // something chomped
-		seqtbl_offset_char(seq_54_chomped); // chomped
-		play_seq();
+		if (Char.charid == charid_4_skeleton && enable_lighting == 1)
+		{
+			// Skeleton is immortal
+			display_text_bottom("DEAD DO NOT FEAR IN DARK");
+			text_time_remaining = 24;
+			text_time_total = 24;
+		}
+		else
+		{
+			if (Char.charid != charid_0_kid && current_level == 7 & curr_room == 7)
+			{
+				get_tile(2, 3, 2);
+				trigger_button(0, tiles_15_opener, -1);
+
+			}
+			take_hp(100);
+			play_sound(sound_46_chomped); // something chomped
+			seqtbl_offset_char(seq_54_chomped); // chomped
+			play_seq();
+		}
 	}
 }
 

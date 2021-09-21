@@ -17,7 +17,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 The authors of this program may be contacted at https://forum.princed.org
 */
-
 #include "common.h"
 
 #define SEQTBL_BASE 0x196E
@@ -902,9 +901,16 @@ int __pascal far take_hp(int count) {
 			hitp_delta = -hitp_curr;
 			dead = 1;
 		} else {
+			if (count == 2 && current_level != 2)
+			{
+				// CustomLogic when prince takes a critical hit
+				flash_color = color_13_brightmagenta; // Bright Magenta
+				flash_time = 3;
+			}
 			hitp_delta = -count;
 		}
-	} else {
+	}
+	else {
 		if (count >= guardhp_curr) {
 			guardhp_delta = -guardhp_curr;
 			dead = 1;
@@ -1215,7 +1221,7 @@ void __pascal far play_kid() {
 					current_level != 15 // no message if died on potions level
 				) {
 					text_time_remaining = text_time_total = 288;
-					display_text_bottom("Press Button to Continue");
+					display_text_bottom("Press Enter");
 				} else {
 					text_time_remaining = text_time_total = 36;
 				}
@@ -1680,17 +1686,81 @@ void __pascal far set_objtile_at_char() {
 }
 
 // seg006:1463
-void __pascal far proc_get_object() {
-	if (Char.charid != charid_0_kid || pickup_obj_type == 0) return;
-	if (pickup_obj_type == -1) {
-		have_sword = -1;
-		play_sound(sound_37_victory); // get sword
-		flash_color = color_14_brightyellow;
-		flash_time = 8;
-	} else {
+void __pascal far proc_get_object() { // CustomLogic
+	if (Char.charid != charid_0_kid) return;
+	if (pickup_obj_type == -1)
+	{
+		if (current_level == 4 && curr_room == 1)
+		{
+			flash_color = color_13_brightmagenta;
+			flash_time = 8;
+			if (Char.direction == dir_0_right)
+			{
+				Char.direction = dir_FF_left;
+			}
+			play_sound(sound_45_jump_through_mirror);
+			draw_guard_hp(0, 10);
+			hitp_curr = 1;
+			draw_kid_hp(1, hitp_max);
+			hitp_delta = 2;
+
+			next_room = room_L;			
+			Char.x = 30;
+
+			char hint[140];
+			snprintf(hint, sizeof(hint),
+				"HINT\n"
+				"It takes skill to win a battle, but brains to win a war.\n"
+				"- by Amy I. Long");
+			show_dialog(hint);
+		}
+		else
+		{
+			have_sword = -1;
+			play_sound(sound_37_victory); // get sword
+			flash_color = color_14_brightyellow;
+			flash_time = 8;
+		}
+	}
+	else {					// CustomLogic
 		switch (--pickup_obj_type) {
+			case -1: // empty pot
+				if (current_level == 7)
+				{
+					switch (curr_room)
+					{
+					case 4:
+						match_the_tiles(4, 5, 2, 0, 2);
+						break;
+					case 7:
+						match_the_tiles(7, 4, 2, 1, 2);
+						break;
+					case 19:
+						match_the_tiles(19, 3, 2, 2, 2);
+						break;
+					}
+				}
+				break;
 			case 0: // health
-				if (hitp_curr != hitp_max) {
+				if (current_level == 2)
+				{
+					if (curr_room == 23)
+					{
+						stop_sounds();
+						play_sound(sound_44_skel_alive);
+						flash_color = color_6_brown;
+						flash_time = 18;
+						guardhp_delta = -guardhp_curr;
+						Guard.alive = 0;
+					}
+					else
+					{
+						stop_sounds();
+						play_sound(sound_13_kid_hurt);
+						hitp_delta = -1;
+					}
+				}
+				else if (hitp_curr != hitp_max) {
 					stop_sounds();
 					play_sound(sound_33_small_potion); // small potion
 					hitp_delta = 1;
@@ -1699,17 +1769,140 @@ void __pascal far proc_get_object() {
 				}
 			break;
 			case 1: // life
-				stop_sounds();
-				play_sound(sound_30_big_potion); // big potion
-				flash_color = color_4_red;
-				flash_time = 4;
-				add_life();
+			    if (current_level == 2 && curr_room == 8) // CustomLogic
+				{
+					stop_sounds();
+					play_sound(sound_25_presentation);
+					flash_color = color_11_brightcyan;
+					flash_time = 4;
+					add_life();
+					take_hp(1);
+					play_sound(sound_13_kid_hurt);
+					Char.y = y_land[1]; // row 0 + 1
+					Char.curr_row = 1;
+					seqtbl_offset_char(seq_43_start_run_after_turn);
+					get_tile(3, 3, 3);
+					trigger_button(0, 0, -1);
+				}
+				else
+				{
+					stop_sounds();
+					play_sound(sound_30_big_potion); // big potion
+					flash_color = color_4_red;
+					flash_time = 4;
+					add_life();
+				}
 			break;
 			case 2: // feather
-				feather_fall();
+				if(current_level == 2 && curr_room == 16)
+				{
+					toggle_upside();
+					feather_fall();
+				}
+				else
+				{
+					feather_fall();
+				}
 			break;
 			case 3: // invert
-				toggle_upside();
+				// CustomLogic
+				if(current_level == 2 && curr_room == 17)
+				{
+					flash_color = color_8_darkgray;
+					flash_time = 8;
+					take_hp(100);
+				}
+				else if (current_level == 3 && (curr_room == 6 || curr_room == 4))
+				{
+					flash_color = color_6_brown;
+					flash_time = 8;
+					if (enable_lighting == 0)
+						enable_lighting = 1;
+					else
+						enable_lighting = 0;
+					need_quick_save = 1;
+				}
+				else if ((current_level == 3 && (curr_room == 12 || curr_room == 22)) ||
+						(current_level == 6 && (curr_room == 19 || curr_room == 12)) || 
+						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 7 || curr_room == 1)))
+				{
+					char hint[140];
+					switch (curr_room)
+					{
+						case 12:
+							snprintf(hint, sizeof(hint),
+								"HINT:\n"
+								"You might need to see everything in light first.");
+							break;
+						case 22:
+							snprintf(hint, sizeof(hint),
+								"HINT:\n"
+								"Skeletons are immortal only in darkness.\n");
+							break;
+						case 19:
+							snprintf(hint, sizeof(hint),
+								"HINT:\n"
+								"Drinking grey potions near moving tiles will cause them to stop.\n"
+								"Match your timings accordingly.");
+							break;
+						case 6:
+							snprintf(hint, sizeof(hint),
+								"HINT:\n"
+								"Make the yellow guard die on this button.");
+							break;
+						case 1:
+							snprintf(hint, sizeof(hint),
+								"Match the third tile to the other two in the right area. "
+								"Use the potion between the spikes to change tiles.");
+							break;
+						case 4:
+							snprintf(hint, sizeof(hint),
+								"Use the potion between the torches to confirm your choice.");
+							break;
+						case 7:
+							snprintf(hint, sizeof(hint),
+								"HINT\n"
+								"The above door can detect if something gets chomped.");
+							break;
+					}
+					if (current_level == 6 && curr_room == 12)
+					{
+						snprintf(hint, sizeof(hint),
+							"HINT:\n"
+							"Some guards can be immortal.");
+					}
+					show_dialog(hint);
+				}
+				else if (current_level == 4)
+				{
+					if (curr_room == 6 || curr_room == 10 || curr_room == 7)
+					{
+						flash_color = color_13_brightmagenta;
+						flash_time = 8;
+						if (Char.direction == dir_0_right)
+							Char.direction = dir_FF_left;
+						play_sound(sound_45_jump_through_mirror);
+						draw_guard_hp(0, 10);
+						next_room = room_A;
+						Char.y = -8;
+					}
+					else
+					{
+						flash_color = color_13_brightmagenta;
+						flash_time = 8;
+						if (Char.direction == dir_0_right)
+							Char.direction = dir_FF_left;
+						play_sound(sound_45_jump_through_mirror);
+						draw_guard_hp(0, 10);
+						next_room = room_L;
+						Char.x = 30;
+					}
+				}
+				else
+				{
+					if (current_level != 6)
+						toggle_upside();
+				}
 			break;
 			case 5: // open
 				get_tile(8, 0, 0);
@@ -1717,14 +1910,142 @@ void __pascal far proc_get_object() {
 			break;
 			case 4: // hurt
 				stop_sounds();
-				play_sound(sound_13_kid_hurt); // Kid hurt (by potion)
 				// Special event: blue potions on potions level take half of HP
 				if (current_level == 15) {
 					hitp_delta = - ((hitp_max + 1) >> 1);
-				} else {
-					hitp_delta = -1;
+				}
+				else {
+					if (current_level == 2 && hitp_curr != hitp_max)
+					{
+						play_sound(sound_33_small_potion); // small potion
+						hitp_delta = 1;
+						flash_color = color_9_brightblue;
+						flash_time = 2;
+					}
+					else if (current_level == 7 && curr_room == 4)
+					{
+						if (get_tile(4, 1, 1) != tiles_10_potion)
+						{
+							get_tile(4, 1, 1);
+							curr_room_tiles[curr_tilepos] = tiles_10_potion;
+							if (get_tile(4, 7, 0) == tiles_2_spike)
+							{
+								// 1
+								get_tile(4, 7, 0);
+								curr_room_tiles[curr_tilepos] = tiles_13_mirror;
+							}
+							need_full_redraw = 1;
+						}
+					}
+					else
+					{
+						play_sound(sound_13_kid_hurt); // Kid hurt (by potion)
+						hitp_delta = -1;
+					}
 				}
 			break;
+		}
+	}
+}
+
+//CustomLogic
+void match_the_tiles(int room, int match_tile_type, int opener_room, int opener_column, int opener_row)
+{
+	/*
+	* 1: Spikes
+	* 2: Mirror
+	* 3: Chomper
+	* 4: Torch
+	* 5: Debris
+	*/
+	bool tiles_are_matching = false;
+	// Toggle potion picked up
+	if (get_tile(room, 1, 1) != tiles_10_potion)
+	{
+		get_tile(room, 1, 1);
+		curr_room_tiles[curr_tilepos] = tiles_10_potion;
+		if (get_tile(room, 7, 0) == tiles_2_spike)
+		{
+			// 1: Spikes to mirror
+			get_tile(room, 7, 0);
+			curr_room_tiles[curr_tilepos] = tiles_13_mirror;
+		}
+		else if (get_tile(room, 7, 0) == tiles_13_mirror)
+		{
+			// 2: Mirror to Chomper
+			get_tile(room, 7, 0);
+			curr_room_tiles[curr_tilepos] = tiles_18_chomper;
+		}
+		else if (get_tile(room, 7, 0) == tiles_18_chomper)
+		{
+			// 3: Chomper to Torch
+			get_tile(room, 7, 0);
+			curr_room_tiles[curr_tilepos] = tiles_19_torch;
+		}
+		else if (get_tile(room, 7, 0) == tiles_19_torch)
+		{
+			// 4: Torch to Debris
+			get_tile(room, 7, 0);
+			curr_room_tiles[curr_tilepos] = tiles_14_debris;
+		}
+		else if (get_tile(room, 7, 0) == tiles_14_debris)
+		{
+			// 5: Debris to Spikes
+			get_tile(room, 7, 0);
+			curr_room_tiles[curr_tilepos] = tiles_2_spike;
+		}
+		need_full_redraw = 1;
+	}
+	// Confirm potion picked up
+	else if (get_tile(room, 1, 2) != tiles_10_potion)
+	{
+		switch (match_tile_type)
+		{
+		case 1:
+			if (get_tile(room, 7, 0) == tiles_2_spike)
+				tiles_are_matching = true;
+			break;
+		case 2:
+			if (get_tile(room, 7, 0) == tiles_13_mirror)
+				tiles_are_matching = true;
+			break;
+		case 3:
+			if (get_tile(room, 7, 0) == tiles_18_chomper)
+				tiles_are_matching = true;
+			break;
+		case 4:
+			if (get_tile(room, 7, 0) == tiles_19_torch)
+				tiles_are_matching = true;
+			break;
+		case 5:
+			if (get_tile(room, 7, 0) == tiles_14_debris)
+				tiles_are_matching = true;
+			break;
+		default:
+			tiles_are_matching = false;
+		}
+		if (tiles_are_matching)
+		{
+			get_tile(opener_room, opener_column, opener_row);
+			trigger_button(0, tiles_15_opener, -1);
+			stop_sounds();
+			play_sound(sound_37_victory);
+			flash_color = color_7_lightgray;
+			flash_time = 8;
+		}
+		else
+		{
+			if (get_tile(room, 1, 2) != tiles_10_potion)
+			{
+				get_tile(room, 1, 2);
+				curr_room_tiles[curr_tilepos] = tiles_10_potion;
+				take_hp(1);
+				play_sound(sound_13_kid_hurt);
+				display_text_bottom("CAREFUL!");
+				text_time_remaining = 24;
+				text_time_total = 24;
+				need_full_redraw = 1;
+			}
 		}
 	}
 }
@@ -1764,6 +2085,41 @@ void __pascal far on_guard_killed() {
 		play_sound(sound_43_victory_Jaffar); // Jaffar's death
 	} else if (Char.charid != charid_1_shadow) {
 		play_sound(sound_37_victory); // Guard's death
+	}
+	// CustomLogic
+	if (current_level == 4)
+	{
+		switch (curr_room)
+		{
+			case 5:
+				get_tile(8, 2, 2);
+				trigger_button(0, tiles_15_opener, -1);
+				break;
+			case 2:
+				get_tile(8, 3, 2);
+				trigger_button(0, tiles_15_opener, -1);
+				break;
+			case 3:
+				get_tile(8, 4, 2);
+				trigger_button(0, tiles_15_opener, -1);
+				break;
+			case 11:
+				get_tile(8, 5, 2);
+				trigger_button(0, tiles_15_opener, -1);
+				break;
+			case 12:
+				get_tile(8, 6, 2);
+				trigger_button(0, tiles_15_opener, -1);
+				break;
+			case 7:
+				get_tile(8, 7, 2);
+				trigger_button(0, tiles_15_opener, -1);
+				break;
+			case 17:
+				get_tile(8, 8, 2);
+				trigger_button(0, tiles_15_opener, -1);
+				break;
+		}
 	}
 }
 
