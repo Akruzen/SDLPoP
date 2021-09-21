@@ -26,7 +26,7 @@ image_type* screen_overlay = NULL;
 Uint32 bgcolor;
 
 const char mask_filename[] = "data/light.png";
-const Uint8 ambient_level = 20;
+const Uint8 ambient_level = 20; //comment
 
 // Called once at startup.
 void init_lighting() {
