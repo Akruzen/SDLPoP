@@ -10,7 +10,7 @@ QUICKSAVE.SAV
 *.p1r
 
 # PoP custom levelsets
-mods/*/
+# mods/*/
 
 # Object files
 *.o
