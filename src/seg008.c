@@ -641,7 +641,8 @@ void __pascal far draw_tile_anim() {
 					}
 					else if ((current_level == 3 && (curr_room == 12 || curr_room == 22)) ||
 						(current_level == 6 && (curr_room == 19 || curr_room == 12)) ||
-						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 1 || curr_room == 7)))
+						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 1 || curr_room == 7)) || 
+						(current_level == 8 && curr_room == 2))
 					{
 						color = 11;
 					}
@@ -1922,7 +1923,12 @@ void __pascal far show_level() {
 				need_full_redraw = 1;
 				break;
 			case 7:
-				display_text_bottom("6: MATCHING AND CLIMBING");
+				display_text_bottom("7: MATCHING AND CLIMBING");
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
+			case 8:
+				display_text_bottom("8: MUTUAL UNDERSTANDING");
 				enable_lighting = 0;
 				need_full_redraw = 1;
 				break;

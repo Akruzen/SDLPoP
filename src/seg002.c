@@ -688,25 +688,33 @@ void __pascal far autocontrol_guard_inactive() {
 	short distance;
 	if (Kid.alive >= 0) return;
 	distance = char_opp_dist();
-	if (Opp.curr_row != Char.curr_row || (word)distance < (word)-8) {
-		// If Kid made a sound ...
-		if (is_guard_notice) {
-			is_guard_notice = 0;
-			if (distance < 0) {
-				// ... and Kid is behind Guard, Guard turns around.
-				if ((word)distance < (word)-4) {
-					move_4_down();
+	if (current_level == 8 && curr_room == 2 && (get_tile(2, 3, 2) != tiles_10_potion)) // CustomLogic
+	{
+		move_down_forw();
+	}
+	else if (current_level != 8 || curr_room != 2)
+	{
+		if (Opp.curr_row != Char.curr_row || (word)distance < (word)-8) {
+			// If Kid made a sound ...
+			if (is_guard_notice) {
+				is_guard_notice = 0;
+				if (distance < 0) {
+					// ... and Kid is behind Guard, Guard turns around.
+					if ((word)distance < (word)-4) {
+						move_4_down();
+					}
+					return;
 				}
+			}
+			else if (distance < 0) {
 				return;
 			}
-		} else if (distance < 0) {
-			return;
 		}
-	}
-	if (can_guard_see_kid) {
-		// If Guard can see Kid, Guard moves to fighting pose.
-		if (current_level != 13 || guard_notice_timer == 0) {
-			move_down_forw();
+		if (can_guard_see_kid) {
+			// If Guard can see Kid, Guard moves to fighting pose.
+			if (current_level != 13 || guard_notice_timer == 0) {
+				move_down_forw();
+			}
 		}
 	}
 }
@@ -717,60 +725,104 @@ void __pascal far autocontrol_guard_active() {
 	short char_frame;
 	short distance;
 	char_frame = Char.frame;
-	if (char_frame != frame_166_stand_inactive && char_frame >= 150 && can_guard_see_kid != 1) {
-		if (can_guard_see_kid == 0) {
-			if (droppedout != 0) {
-				guard_follows_kid_down();
-				//return;
-			} else if (Char.charid != charid_4_skeleton) {
-				move_down_back();
+	if (current_level == 8 && curr_room == 2 && (get_tile(2, 3, 2) != tiles_10_potion))
+	{
+		if (key_states[SDL_SCANCODE_D])
+		{
+			move_1_forward();
+		}
+		if (key_states[SDL_SCANCODE_A])
+		{
+			move_2_backward();
+		}
+		if (key_states[SDL_SCANCODE_W])
+		{
+			guard_block();
+		}
+		if (key_states[SDL_SCANCODE_Q])
+		{
+			if (is_guard_notice = 0)
+			{
+				move_down_forw();
+				is_guard_notice = 1;
 			}
-			//return;
-		} else { // can_guard_see_kid == 2
-			opp_frame = Opp.frame;
-			distance = char_opp_dist();
-			if (distance >= 12 &&
-				// frames 102..117: falling and landing
-				opp_frame >= frame_102_start_fall_1 && opp_frame < frame_118_stand_up_from_crouch_9 &&
-				Opp.action == actions_5_bumped
-			) {
-				return;
+			else
+			{
+				guard_strike();
 			}
-			if (distance < 35) {
-				if ((Char.sword < sword_2_drawn && distance < 8) || distance < 12) {
-					if (Char.direction == Opp.direction) {
-						// turn around
-						is_guard_notice = 0;
-						move_2_backward();
-						//return;
-					} else {
-						is_guard_notice = 0;
-						move_1_forward();
-						//return;
-					}
-				} else {
-					autocontrol_guard_kid_in_sight(distance);
+		}
+		if (key_states[SDL_SCANCODE_S])
+		{
+			if (is_guard_notice = 1)
+			{
+				move_4_down();
+				is_guard_notice = 0;
+			}
+		}
+	}
+	else
+	{
+		if (char_frame != frame_166_stand_inactive && char_frame >= 150 && can_guard_see_kid != 1) {
+			if (can_guard_see_kid == 0) {
+				if (droppedout != 0) {
+					guard_follows_kid_down();
 					//return;
 				}
-			} else {
-				if (guard_refrac != 0) return;
-				if (Char.direction != Opp.direction) {
-					// frames 7..14: running
-					// frames 34..43: run-jump
-					if (opp_frame >= frame_7_run && opp_frame < 15) {
-						if (distance < 40) move_6_shift();
-						return;
-					} else if (opp_frame >= frame_34_start_run_jump_1 && opp_frame < 44) {
-						if (distance < 50) move_6_shift();
-						return;
+				else if (Char.charid != charid_4_skeleton && (current_level != 8 && curr_room != 2 && (get_tile(2, 3, 2) == tiles_10_potion))) { // CustomLogic
+					move_down_back();
+				}
+				//return;
+			}
+			else { // can_guard_see_kid == 2
+				opp_frame = Opp.frame;
+				distance = char_opp_dist();
+				if (distance >= 12 &&
+					// frames 102..117: falling and landing
+					opp_frame >= frame_102_start_fall_1 && opp_frame < frame_118_stand_up_from_crouch_9 &&
+					Opp.action == actions_5_bumped
+					) {
+					return;
+				}
+				if (distance < 35) {
+					if ((Char.sword < sword_2_drawn && distance < 8) || distance < 12) {
+						if (Char.direction == Opp.direction) {
+							// turn around
+							is_guard_notice = 0;
+							move_2_backward();
+							//return;
+						}
+						else {
+							is_guard_notice = 0;
+							move_1_forward();
+							//return;
+						}
+					}
+					else {
+						autocontrol_guard_kid_in_sight(distance);
 						//return;
 					}
 				}
-				autocontrol_guard_kid_far();
+				else {
+					if (guard_refrac != 0) return;
+					if (Char.direction != Opp.direction) {
+						// frames 7..14: running
+						// frames 34..43: run-jump
+						if (opp_frame >= frame_7_run && opp_frame < 15) {
+							if (distance < 40) move_6_shift();
+							return;
+						}
+						else if (opp_frame >= frame_34_start_run_jump_1 && opp_frame < 44) {
+							if (distance < 50) move_6_shift();
+							return;
+							//return;
+						}
+					}
+					autocontrol_guard_kid_far();
+				}
+				//...
 			}
 			//...
 		}
-		//...
 	}
 }
 

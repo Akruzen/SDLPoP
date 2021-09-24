@@ -1824,7 +1824,8 @@ void __pascal far proc_get_object() { // CustomLogic
 				}
 				else if ((current_level == 3 && (curr_room == 12 || curr_room == 22)) ||
 						(current_level == 6 && (curr_room == 19 || curr_room == 12)) || 
-						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 7 || curr_room == 1)))
+						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 7 || curr_room == 1)) || 
+						current_level == 8 && curr_room == 2)
 				{
 					char hint[140];
 					switch (curr_room)
@@ -1864,6 +1865,24 @@ void __pascal far proc_get_object() { // CustomLogic
 								"HINT\n"
 								"The above door can detect if something gets chomped.");
 							break;
+						case 2:
+							snprintf(hint, sizeof(hint),
+								"Guard: Hey! I can help you!\n"
+								"Prince: And how exactly?");
+							show_dialog(hint);
+							snprintf(hint, sizeof(hint),
+								"Guard: I can press these buttons for you!\n"
+								"Prince: Oh thank you :)");
+							show_dialog(hint);
+							snprintf(hint, sizeof(hint),
+								"Guard: But in return, spare me please!\n"
+								"Prince: Ok, I won't hurt you.");
+							show_dialog(hint);
+							snprintf(hint, sizeof(hint),
+								"Use A and D keys to move guard.\n");
+							show_dialog(hint);
+							break;
+
 					}
 					if (current_level == 6 && curr_room == 12)
 					{
@@ -1871,7 +1890,10 @@ void __pascal far proc_get_object() { // CustomLogic
 							"HINT:\n"
 							"Some guards can be immortal.");
 					}
-					show_dialog(hint);
+					if (current_level != 8)
+					{
+						show_dialog(hint);
+					}
 				}
 				else if (current_level == 4)
 				{
@@ -1896,6 +1918,15 @@ void __pascal far proc_get_object() { // CustomLogic
 						draw_guard_hp(0, 10);
 						next_room = room_L;
 						Char.x = 30;
+					}
+				}
+				else if (current_level == 8 && curr_room == 2)
+				{
+					if (get_tile(2, 3, 2) != tiles_10_potion)
+					{
+						get_tile(2, 3, 2);
+						curr_room_tiles[curr_tilepos] = tiles_1_floor;
+						Opp.charid = seq_63_guard_stand_active;
 					}
 				}
 				else
