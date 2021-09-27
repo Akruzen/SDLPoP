@@ -2586,13 +2586,13 @@ void load_from_opendats_metadata(int resource_id, const char* extension, FILE** 
 				fp = fopen(locate_file(image_filename), "rb");
 			}
 			else {
-				if (!skip_mod_data_files) {
+				/*if (!skip_mod_data_files) {
 					char image_filename_mod[POP_MAX_PATH];
 					// before checking data/, first try mods/MODNAME/data/
 					snprintf_check(image_filename_mod, sizeof(image_filename_mod), "%s/%s", mod_data_path, image_filename);
 					//printf("loading (binary) %s",image_filename_mod);
 					fp = fopen(locate_file(image_filename_mod), "rb");
-				}
+				}*/
 				if (fp == NULL && !skip_normal_data_files) {
 					fp = fopen(locate_file(image_filename), "rb");
 				}

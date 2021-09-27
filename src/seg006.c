@@ -1929,6 +1929,10 @@ void __pascal far proc_get_object() { // CustomLogic
 						Opp.charid = seq_63_guard_stand_active;
 					}
 				}
+				else if (current_level == 9 & curr_room == 11)
+				{
+					rewind_timer = 60;
+				}
 				else
 				{
 					if (current_level != 6)

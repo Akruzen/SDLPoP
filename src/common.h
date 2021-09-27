@@ -31,6 +31,10 @@ extern "C" {
 #include <sys/stat.h>
 #include <stdint.h>
 #include <stdbool.h>
+// CustomLogic
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifndef _MSC_VER // unistd.h does not exist in the Windows SDK.
 #include <unistd.h>

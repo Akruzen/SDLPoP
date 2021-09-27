@@ -289,6 +289,7 @@ int quick_process(process_func_type process_func) {
 	process(demo_time);
 	process(curr_guard_color);
 	process(guard_notice_timer);
+	//process(rewind_timer); // CustomLogic
 	process(guard_skill);
 	process(shadow_initialized);
 	process(guard_refrac);
@@ -1143,7 +1144,271 @@ int __pascal far play_kid_frame() {
 		return 1;
 	}
 	if (Char.room != 0) {
-		play_seq();
+		if (current_level == 9 && curr_room == 11)
+		{
+			if (get_tile(11, 1, 1) != tiles_10_potion)
+			{
+				game_is_rewinding = true;
+			}
+			switch (rewind_timer)
+			{
+			case 60:
+				Char.frame = rewind_frame60;
+				Char.x = x60;
+				display_text_bottom("Start");
+				text_time_remaining = 24;
+				text_time_total = 24;
+				break;
+			case 59:
+				Char.x = x59;
+				Char.frame = rewind_frame59;
+				break;
+			case 58:
+				Char.x = x58;
+				Char.frame = rewind_frame58;
+				break;
+			case 57:
+				Char.x = x57;
+				Char.frame = rewind_frame57;
+				break;
+			case 56:
+				Char.x = x56;
+				Char.frame = rewind_frame56;
+				break;
+			case 55:
+				Char.x = x55;
+				Char.frame = rewind_frame55;
+				break;
+			case 54:
+				Char.x = x54;
+				Char.frame = rewind_frame54;
+				break;
+			case 53:
+				Char.x = x53;
+				Char.frame = rewind_frame53;
+				break;
+			case 52:
+				Char.x = x52;
+				Char.frame = rewind_frame52;
+				break;
+			case 51:
+				Char.x = x51;
+				Char.frame = rewind_frame51;
+				break;
+			case 50:
+				Char.x = x50;
+				Char.frame = rewind_frame50;
+				break;
+			case 49:
+				Char.x = x49;
+				Char.frame = rewind_frame49;
+				break;
+			case 48:
+				Char.x = x48;
+				Char.frame = rewind_frame48;
+				break;
+			case 47:
+				Char.x = x47;
+				Char.frame = rewind_frame47;
+				break;
+			case 46:
+				Char.x = x46;
+				Char.frame = rewind_frame46;
+				break;
+			case 45:
+				Char.x = x45;
+				Char.frame = rewind_frame45;
+				break;
+			case 44:
+				Char.x = x44;
+				Char.frame = rewind_frame44;
+				break;
+			case 43:
+				Char.x = x43;
+				Char.frame = rewind_frame43;
+				break;
+			case 42:
+				Char.x = x42;
+				Char.frame = rewind_frame42;
+				break;
+			case 41:
+				Char.x = x41;
+				Char.frame = rewind_frame41;
+				break;
+			case 40:
+				Char.x = x40;
+				Char.frame = rewind_frame40;
+				break;
+			case 39:
+				Char.x = x39;
+				Char.frame = rewind_frame39;
+				break;
+			case 38:
+				Char.x = x38;
+				Char.frame = rewind_frame38;
+				break;
+			case 37:
+				Char.x = x37;
+				Char.frame = rewind_frame37;
+				break;
+			case 36:
+				Char.x = x36;
+				Char.frame = rewind_frame36;
+				break;
+			case 35:
+				Char.x = x35;
+				Char.frame = rewind_frame35;
+				break;
+			case 34:
+				Char.x = x34;
+				Char.frame = rewind_frame34;
+				break;
+			case 33:
+				Char.x = x33;
+				Char.frame = rewind_frame33;
+				break;
+			case 32:
+				Char.x = x32;
+				Char.frame = rewind_frame32;
+				break;
+			case 31:
+				Char.x = x31;
+				Char.frame = rewind_frame31;
+				break;
+			case 30:
+				Char.x = x30;
+				Char.frame = rewind_frame30;
+				break;
+			case 29:
+				Char.x = x29;
+				Char.frame = rewind_frame29;
+				break;
+			case 28:
+				Char.x = x28;
+				Char.frame = rewind_frame28;
+				break;
+			case 27:
+				Char.x = x27;
+				Char.frame = rewind_frame27;
+				break;
+			case 26:
+				Char.x = x26;
+				Char.frame = rewind_frame26;
+				break;
+			case 25:
+				Char.x = x25;
+				Char.frame = rewind_frame25;
+				break;
+			case 24:
+				Char.x = x24;
+				Char.frame = rewind_frame24;
+				break;
+			case 23:
+				Char.x = x23;
+				Char.frame = rewind_frame23;
+				break;
+			case 22:
+				Char.x = x22;
+				Char.frame = rewind_frame22;
+				break;
+			case 21:
+				Char.x = x21;
+				Char.frame = rewind_frame21;
+				break;
+			case 20:
+				Char.x = x20;
+				Char.frame = rewind_frame20;
+				break;
+			case 19:
+				Char.x = x19;
+				Char.frame = rewind_frame19;
+				break;
+			case 18:
+				Char.x = x18;
+				Char.frame = rewind_frame18;
+				break;
+			case 17:
+				Char.x = x17;
+				Char.frame = rewind_frame17;
+				break;
+			case 16:
+				Char.x = x16;
+				Char.frame = rewind_frame16;
+				break;
+			case 15:
+				Char.x = x15;
+				Char.frame = rewind_frame15;
+				break;
+			case 14:
+				Char.x = x14;
+				Char.frame = rewind_frame14;
+				break;
+			case 13:
+				Char.x = x13;
+				Char.frame = rewind_frame13;
+				break;
+			case 12:
+				Char.x = x12;
+				Char.frame = rewind_frame12;
+				break;
+			case 11:
+				Char.x = x11;
+				Char.frame = rewind_frame11;
+				break;
+			case 10:
+				Char.x = x10;
+				Char.frame = rewind_frame10;
+				break;
+			case 9:
+				Char.x = x9;
+				Char.frame = rewind_frame9;
+				break;
+			case 8:
+				Char.x = x8;
+				Char.frame = rewind_frame8;
+				break;
+			case 7:
+				Char.x = x7;
+				Char.frame = rewind_frame7;
+				break;
+			case 6:
+				Char.x = x6;
+				Char.frame = rewind_frame6;
+				break;
+			case 5:
+				Char.x = x5;
+				Char.frame = rewind_frame5;
+				break;
+			case 4:
+				Char.x = x4;
+				Char.frame = rewind_frame4;
+				break;
+			case 3:
+				Char.x = x3;
+				Char.frame = rewind_frame3;
+				break;
+			case 2:
+				Char.x = x2;
+				Char.frame = rewind_frame2;
+				break;
+			case 1:
+				Char.x = x1;
+				Char.frame = rewind_frame1;
+				game_is_rewinding = false;
+				display_text_bottom("End");
+				text_time_remaining = 24;
+				text_time_total = 24;
+				break;
+			case 0:
+				play_seq();
+				break;
+			}
+			savekid();
+		}
+		else
+		{
+			play_seq();
+		}
 		fall_accel();
 		fall_speed();
 		load_frame_to_obj();
@@ -2113,10 +2378,10 @@ void load_all_sounds() {
 		load_opt_sounds(43, 56); //added
 	} else {
 		// First load any sounds included in the mod folder...
-		skip_normal_data_files = true;
-		load_sounds(0, 43);
+		/*skip_normal_data_files = true;
+		load_sounds(0, 43);							// CustomLogic
 		load_opt_sounds(43, 56);
-		skip_normal_data_files = false;
+		skip_normal_data_files = false;*/
 		// ... then load any missing sounds from SDLPoP's own resources.
 		skip_mod_data_files = true;
 		load_sounds(0, 43);
@@ -2199,7 +2464,7 @@ void __pascal far show_copyprot(int where) {
 
 // seg000:2489
 void __pascal far show_loading() {
-	show_text(&screen_rect, 0, 0, "Loading. . . .");
+	show_text(&screen_rect, 0, 0, "Please Wait. . .");
 	update_screen();
 }
 
