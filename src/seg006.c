@@ -1932,6 +1932,10 @@ void __pascal far proc_get_object() { // CustomLogic
 				else if (current_level == 9 & curr_room == 11)
 				{
 					rewind_timer = 60;
+					flash_color = color_14_brightyellow;
+					flash_time = 60;
+					play_sound(sound_28_death_in_fight);
+					game_is_rewinding = true;
 				}
 				else
 				{

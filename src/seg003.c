@@ -503,314 +503,39 @@ void __pascal far timers() {
 		--wasted_timer; // CustomLogic
 	}
 	if (wasted_timer == 1) {
-		display_text_bottom("WASTED");
-		text_time_remaining = 24;
-		text_time_total = 24;
+		if (Char.alive > 0)
+		{
+			display_text_bottom("WASTED");
+			text_time_remaining = 24;
+			text_time_total = 24;
+		}
 	}
 	if (current_level == 9 && curr_room == 11 && !game_is_rewinding)
 	{
-		switch (frame_storer) // Stores the kids frames for the last second
+		if (frame_storer == 60)
 		{
-		case 1:
-			x1 = Kid.x;
-			rewind_frame1 = Kid.frame;
+			for (int i = 1; i < 60; i++)
+			{
+				// Push back other frames to their previous index
+				rewind_frame_array[(i - 1)] = rewind_frame_array[i];
+				rewind_XPos_array[(i - 1)] = rewind_XPos_array[i];
+				rewind_YPos_array[(i - 1)] = rewind_YPos_array[i];
+				rewind_Kid_Direction[(i - 1)] = rewind_Kid_Direction[i];
+			}
+			// Overwrites last frame in array
+			rewind_frame_array[59] = Char.frame;
+			rewind_XPos_array[59] = Char.x;
+			rewind_YPos_array[59] = Char.y;
+			rewind_Kid_Direction[59] = Char.direction;
+		}
+		else if (frame_storer < 60)
+		{
+			// If prince rewinds time before 60 frames have passed in the screen
+			rewind_frame_array[frame_storer] = Char.frame;
+			rewind_XPos_array[frame_storer] = Char.x;
+			rewind_YPos_array[frame_storer] = Char.y;
+			rewind_Kid_Direction[frame_storer] = Char.direction;
 			frame_storer++;
-			break;
-		case 2:
-			x2 = Kid.x;
-			rewind_frame2 = Kid.frame;
-			frame_storer++;
-			break;
-		case 3:
-			x3 = Kid.x;
-			rewind_frame3 = Kid.frame;
-			frame_storer++;
-			break;
-		case 4:
-			x4 = Kid.x;
-			rewind_frame4 = Kid.frame;
-			frame_storer++;
-			break;
-		case 5:
-			x5 = Kid.x;
-			rewind_frame5 = Kid.frame;
-			frame_storer++;
-			break;
-		case 6:
-			x6 = Kid.x;
-			rewind_frame6 = Kid.frame;
-			frame_storer++;
-			break;
-		case 7:
-			x7 = Kid.x;
-			rewind_frame7 = Kid.frame;
-			frame_storer++;
-			break;
-		case 8:
-			x8 = Kid.x;
-			rewind_frame8 = Kid.frame;
-			frame_storer++;
-			break;
-		case 9:
-			x9 = Kid.x;
-			rewind_frame9 = Kid.frame;
-			frame_storer++;
-			break;
-		case 10:
-			x10 = Kid.x;
-			rewind_frame10 = Kid.frame;
-			frame_storer++;
-			break;
-		case 11:
-			x11 = Kid.x;
-			rewind_frame11 = Kid.frame;
-			frame_storer++;
-			break;
-		case 12:
-			x12 = Kid.x;
-			rewind_frame12 = Kid.frame;
-			frame_storer++;
-			break;
-		case 13:
-			x13 = Kid.x;
-			rewind_frame13 = Kid.frame;
-			frame_storer++;
-			break;
-		case 14:
-			x14 = Kid.x;
-			rewind_frame14 = Kid.frame;
-			frame_storer++;
-			break;
-		case 15:
-			x15 = Kid.x;
-			rewind_frame15 = Kid.frame;
-			frame_storer++;
-			break;
-		case 16:
-			x16 = Kid.x;
-			rewind_frame16 = Kid.frame;
-			frame_storer++;
-			break;
-		case 17:
-			x17 = Kid.x;
-			rewind_frame17 = Kid.frame;
-			frame_storer++;
-			break;
-		case 18:
-			x18 = Kid.x;
-			rewind_frame18 = Kid.frame;
-			frame_storer++;
-			break;
-		case 19:
-			x19 = Kid.x;
-			rewind_frame19 = Kid.frame;
-			frame_storer++;
-			break;
-		case 20:
-			x20 = Kid.x;
-			rewind_frame20 = Kid.frame;
-			frame_storer++;
-			break;
-		case 21:
-			x21 = Kid.x;
-			rewind_frame21 = Kid.frame;
-			frame_storer++;
-			break;
-		case 22:
-			x22 = Kid.x;
-			rewind_frame22 = Kid.frame;
-			frame_storer++;
-			break;
-		case 23:
-			x23 = Kid.x;
-			rewind_frame23 = Kid.frame;
-			frame_storer++;
-			break;
-		case 24:
-			x24 = Kid.x;
-			rewind_frame24 = Kid.frame;
-			frame_storer++;
-			break;
-		case 25:
-			x25 = Kid.x;
-			rewind_frame25 = Kid.frame;
-			frame_storer++;
-			break;
-		case 26:
-			x26 = Kid.x;
-			rewind_frame26 = Kid.frame;
-			frame_storer++;
-			break;
-		case 27:
-			x27 = Kid.x;
-			rewind_frame27 = Kid.frame;
-			frame_storer++;
-			break;
-		case 28:
-			x28 = Kid.x;
-			rewind_frame28 = Kid.frame;
-			frame_storer++;
-			break;
-		case 29:
-			x29 = Kid.x;
-			rewind_frame29 = Kid.frame;
-			frame_storer++;
-			break;
-		case 30:
-			x30 = Kid.x;
-			rewind_frame30 = Kid.frame;
-			frame_storer++;
-			break;
-		case 31:
-			x31 = Kid.x;
-			rewind_frame31 = Kid.frame;
-			frame_storer++;
-			break;
-		case 32:
-			x32 = Kid.x;
-			rewind_frame32 = Kid.frame;
-			frame_storer++;
-			break;
-		case 33:
-			x33 = Kid.x;
-			rewind_frame33 = Kid.frame;
-			frame_storer++;
-			break;
-		case 34:
-			x34 = Kid.x;
-			rewind_frame34 = Kid.frame;
-			frame_storer++;
-			break;
-		case 35:
-			x35 = Kid.x;
-			rewind_frame35 = Kid.frame;
-			frame_storer++;
-			break;
-		case 36:
-			x36 = Kid.x;
-			rewind_frame36 = Kid.frame;
-			frame_storer++;
-			break;
-		case 37:
-			x37 = Kid.x;
-			rewind_frame37 = Kid.frame;
-			frame_storer++;
-			break;
-		case 38:
-			x38 = Kid.x;
-			rewind_frame38 = Kid.frame;
-			frame_storer++;
-			break;
-		case 39:
-			x39 = Kid.x;
-			rewind_frame39 = Kid.frame;
-			frame_storer++;
-			break;
-		case 40:
-			x40 = Kid.x;
-			rewind_frame40 = Kid.frame;
-			frame_storer++;
-			break;
-		case 41:
-			x41 = Kid.x;
-			rewind_frame41 = Kid.frame;
-			frame_storer++;
-			break;
-		case 42:
-			x42 = Kid.x;
-			rewind_frame42 = Kid.frame;
-			frame_storer++;
-			break;
-		case 43:
-			x43 = Kid.x;
-			rewind_frame43 = Kid.frame;
-			frame_storer++;
-			break;
-		case 44:
-			x44 = Kid.x;
-			rewind_frame44 = Kid.frame;
-			frame_storer++;
-			break;
-		case 45:
-			x45 = Kid.x;
-			rewind_frame45 = Kid.frame;
-			frame_storer++;
-			break;
-		case 46:
-			x46 = Kid.x;
-			rewind_frame46 = Kid.frame;
-			frame_storer++;
-			break;
-		case 47:
-			x47 = Kid.x;
-			rewind_frame47 = Kid.frame;
-			frame_storer++;
-			break;
-		case 48:
-			x48 = Kid.x;
-			rewind_frame48 = Kid.frame;
-			frame_storer++;
-			break;
-		case 49:
-			x49 = Kid.x;
-			rewind_frame49 = Kid.frame;
-			frame_storer++;
-			break;
-		case 50:
-			x50 = Kid.x;
-			rewind_frame50 = Kid.frame;
-			frame_storer++;
-			break;
-		case 51:
-			x51 = Kid.x;
-			rewind_frame51 = Kid.frame;
-			frame_storer++;
-			break;
-		case 52:
-			x52 = Kid.x;
-			rewind_frame52 = Kid.frame;
-			frame_storer++;
-			break;
-		case 53:
-			x53 = Kid.x;
-			rewind_frame53 = Kid.frame;
-			frame_storer++;
-			break;
-		case 54:
-			x54 = Kid.x;
-			rewind_frame54 = Kid.frame;
-			frame_storer++;
-			break;
-		case 55:
-			x55 = Kid.x;
-			rewind_frame55 = Kid.frame;
-			frame_storer++;
-			break;
-		case 56:
-			x56 = Kid.x;
-			rewind_frame56 = Kid.frame;
-			frame_storer++;
-			break;
-		case 57:
-			x57 = Kid.x;
-			rewind_frame57 = Kid.frame;
-			frame_storer++;
-			break;
-		case 58:
-			x58 = Kid.x;
-			rewind_frame58 = Kid.frame;
-			frame_storer++;
-			break;
-		case 59:
-			x59 = Kid.x;
-			rewind_frame59 = Kid.frame;
-			frame_storer++;
-			break;
-		case 60:
-			x60 = Kid.x;
-			rewind_frame60 = Kid.frame;
-			frame_storer = 1;
-			break;
 		}
 	}
 	if (is_feather_fall && !check_sound_playing()) {
