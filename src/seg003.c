@@ -499,6 +499,14 @@ void __pascal far timers() {
 	if (rewind_timer > 0) {
 		--rewind_timer; // CustomLogic
 	}
+	if (wasted_timer > 0) {
+		--wasted_timer; // CustomLogic
+	}
+	if (wasted_timer == 1) {
+		display_text_bottom("WASTED");
+		text_time_remaining = 24;
+		text_time_total = 24;
+	}
 	if (current_level == 9 && curr_room == 11 && !game_is_rewinding)
 	{
 		switch (frame_storer) // Stores the kids frames for the last second

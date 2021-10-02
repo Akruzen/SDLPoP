@@ -1972,6 +1972,13 @@ void __pascal far proc_get_object() { // CustomLogic
 							need_full_redraw = 1;
 						}
 					}
+					else if (current_level == 10 && curr_room == (1 || 8))
+					{
+						create_random_room(10, 2, 2);
+						create_random_room(10, 4, 1);
+						get_tile(8, 0, 0);
+						trigger_button(0, 0, -1);
+					}
 					else
 					{
 						play_sound(sound_13_kid_hurt); // Kid hurt (by potion)
@@ -2085,6 +2092,215 @@ void match_the_tiles(int room, int match_tile_type, int opener_room, int opener_
 	}
 }
 
+// CustomLogic
+void create_random_room(int level, int room, int previous_room)
+{
+	if (current_level == level)
+	{/*
+		display_text_bottom("Reached");
+		text_time_remaining = 24;
+		text_time_total = 24;*/
+		randomize(room, previous_room);
+	}
+	need_full_redraw = 1;
+}
+
+// CustomLogic
+void randomize(int room, int previous_room)
+{
+	for (int j = 0; j < 3; j++) // j is row counter
+	{
+		for (int i = 0; i < 9; i++) // i is column counter
+		{
+			int rand_tile = rand();
+			get_tile(room, i, j);
+			if (rand_tile % 3 == 0) {
+				curr_room_tiles[curr_tilepos] = tiles_1_floor;
+			}
+			else {
+				curr_room_tiles[curr_tilepos] = tiles_0_empty;
+			}
+
+		}
+	}
+	// Finished basic placement of tiles
+	// Decoration starts here
+	for (int j = 0; j < 3; j++) // Scans through all rows
+	{
+		for (int i = 0; i < 9; i++) // Scans through all columns
+		{
+			make_pillar(room, i, j);
+			make_bigPillar(room, i, j);
+			make_Wall(room, i, j);
+			make_Chomper(room, i, j);
+			make_Spikes(room, i, j);
+			make_Torch_Debris(room, i, j);
+		}
+	}
+	make_Passable(room, previous_room);
+
+}
+
+// CustomLogic
+void make_pillar(int room, int column, int row)
+{
+	int row_above = row - 1;
+	if ((row == 0) || ((get_tile(room, column, row_above) != tiles_0_empty) && (get_tile(room, column, row_above) != tiles_9_bigpillar_top)))
+	{
+		int rand_tile = rand();
+		if (rand_tile % 5 == 0)
+		{
+			get_tile(room, column, row);
+			curr_room_tiles[curr_tilepos] = tiles_3_pillar;
+		}
+	}
+}
+
+// CustomLogic
+void make_bigPillar(int room, int column, int row)
+{
+	if (((get_tile(room, column, 0) == (tiles_1_floor || tiles_3_pillar)) &&
+		(get_tile(room, column, 1) == tiles_0_empty) &&
+		(get_tile(room, column, 2) == (tiles_1_floor || tiles_3_pillar))))
+	{
+		// Places Big Pillar in row 1 and 2
+		int rand_tile = rand();
+		if (rand_tile % 3 == 0)
+		{
+			get_tile(room, column, 1);
+			curr_room_tiles[curr_tilepos] = tiles_9_bigpillar_top;
+			get_tile(room, column, 2);
+			curr_room_tiles[curr_tilepos] = tiles_8_bigpillar_bottom;
+		}
+	}
+	if ((get_tile(room, column, 0) == tiles_0_empty) &&
+		(get_tile(room, column, 1) == (tiles_1_floor || tiles_3_pillar)))
+	{
+		// Places Big Pillar in row 0 and 1
+		int rand_tile = rand();
+		if (rand_tile % 3 == 0)
+		{
+			get_tile(room, column, 0);
+			curr_room_tiles[curr_tilepos] = tiles_9_bigpillar_top;
+			get_tile(room, column, 1);
+			curr_room_tiles[curr_tilepos] = tiles_8_bigpillar_bottom;
+		}
+	}
+}
+
+// CustomLogic
+void make_Chomper(int room, int column, int row)
+{
+	int row_above = row - 1;
+	int left_of_column = column - 1;
+	if (row != 0 && column != 0)
+	{
+		if ((get_tile(room, column, row_above) != (tiles_0_empty)) &&
+			(get_tile(room, column, row_above) != (tiles_9_bigpillar_top)) &&
+			(get_tile(room, column, row) == tiles_1_floor) &&
+			(get_tile(room, left_of_column, row) != tiles_20_wall) &&
+			(get_tile(room, left_of_column, row) != tiles_0_empty))
+		{
+			int rand_tile = rand();
+			if ((rand_tile % 2 == 0) || (rand_tile % 3 == 0))
+			{
+				get_tile(room, column, row);
+				curr_room_tiles[curr_tilepos] = tiles_18_chomper;
+			}
+		}
+	}
+}
+
+// CustomLogic
+void make_Wall(int room, int column, int row)
+{
+	if ((get_tile(room, column, 0) == (tiles_1_floor || tiles_3_pillar)) &&
+		(get_tile(room, column, 1) == tiles_0_empty) &&
+		(get_tile(room, column, 2) == tiles_0_empty))
+	{
+		get_tile(room, column, 1);
+		curr_room_tiles[curr_tilepos] = tiles_20_wall;
+		get_tile(room, column, 2);
+		curr_room_tiles[curr_tilepos] = tiles_20_wall;
+	}
+	if ((get_tile(room, column, 1) != tiles_0_empty) &&
+		(get_tile(room, column, 2) == tiles_0_empty))
+	{
+		get_tile(room, column, 2);
+		curr_room_tiles[curr_tilepos] = tiles_20_wall;
+	}
+}
+
+// CustomLogic
+void make_Spikes(int room, int column, int row)
+{
+	int rand_tile = rand();
+	if ((get_tile(room, column, row) == tiles_1_floor) && (rand_tile % 4 == 0))
+	{
+		get_tile(room, column, row);
+		curr_room_tiles[curr_tilepos] = tiles_2_spike;
+	}
+}
+
+// CustomLogic
+void make_Torch_Debris(int room, int column, int row)
+{
+	int right_of_column = column + 1;
+	int rand_tile = rand();
+	if ((get_tile(room, column, row) == tiles_1_floor) && (rand_tile % 4 == 0) &&
+		(get_tile(room, right_of_column, row) != tiles_20_wall) &&
+		(get_tile(room, right_of_column, row) != tiles_3_pillar))
+	{
+		get_tile(room, column, row);
+		curr_room_tiles[curr_tilepos] = tiles_19_torch;
+	}
+	if ((get_tile(room, column, row) == tiles_1_floor) && (rand_tile % 3 == 0))
+	{
+		get_tile(room, column, row);
+		curr_room_tiles[curr_tilepos] = tiles_14_debris;
+	}
+}
+
+// CustomLogic
+void make_Passable(int room, int previous_room)
+{
+	for (int j = 0; j < 2; j++)
+	{
+		if (((get_tile(room, 0, j) == tiles_0_empty) || (get_tile(room, 0, j) == tiles_9_bigpillar_top)) &&
+			((get_tile(room, 1, j) == tiles_0_empty) || (get_tile(room, 0, j) == tiles_9_bigpillar_top)) &&
+			((get_tile(room, 2, j) == tiles_0_empty) || (get_tile(room, 0, j) == tiles_9_bigpillar_top)))
+		{
+			if ((j == 1) && (get_tile(room, 3, 0) == tiles_9_bigpillar_top))
+			{
+				// Prevents missing big pillar bottom when top is present
+				get_tile(room, 3, 1);
+				curr_room_tiles[curr_tilepos] = tiles_8_bigpillar_bottom;
+			}
+			else if ((j == 0) && (get_tile(room, 3, 1) == tiles_8_bigpillar_bottom))
+			{
+				// Changes big pillar bottom to normal tile if top pillar is absent
+				get_tile(room, 3, 1);
+				curr_room_tiles[curr_tilepos] = tiles_1_floor;
+			}
+			else
+			{
+				get_tile(room, 3, j);
+				curr_room_tiles[curr_tilepos] = tiles_1_floor;
+			}
+		}
+	}
+	if (((get_tile(previous_room, 0, 0) == tiles_0_empty) || (get_tile(previous_room, 0, 0) == tiles_9_bigpillar_top)) &&
+		(get_tile(room, 5, 0) == tiles_0_empty) &&
+		(get_tile(room, 6, 0) == tiles_0_empty) &&
+		(get_tile(room, 7, 0) == tiles_0_empty) &&
+		(get_tile(room, 8, 0) == tiles_0_empty))
+	{
+		// If prince doesn't have two tiles to make a long jump, a tile is placed for making short jump possible
+		get_tile(room, 5, 0);
+		curr_room_tiles[curr_tilepos] = tiles_1_floor;
+	}
+}
+
 // seg006:1599
 int __pascal far is_dead() {
 	// 177: spiked, 178: chomped, 185: dead
@@ -2097,9 +2313,13 @@ void __pascal far play_death_music() {
 	word sound_id;
 	if (Guard.charid == charid_1_shadow) {
 		sound_id = sound_32_shadow_music; // killed by shadow
-	} else if (holding_sword) {
-		sound_id = sound_28_death_in_fight; // death in fight
-	} else {
+	} 
+	else if (holding_sword) {
+		wasted_timer = 24;
+		sound_id = sound_24_death_regular; // death in fight // CustomLogic same sound for all deaths
+	}
+	else {
+		wasted_timer = 25;
 		sound_id = sound_24_death_regular; // death not in fight
 	}
 	play_sound(sound_id);

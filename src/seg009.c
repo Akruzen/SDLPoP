@@ -1229,6 +1229,7 @@ const rect_type far *__pascal draw_text(const rect_type far *rect_ptr,int x_alig
 		}
 	}
 	textstate.current_y = text_top + font->height_above_baseline;
+
 	int i;
 	for (i = 0; i < num_lines; ++i) {
 		const char* line_pos = line_starts[i];

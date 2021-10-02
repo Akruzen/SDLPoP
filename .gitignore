@@ -46,6 +46,7 @@ QUICKSAVE.SAV
 *.hex
 prince
 !data/PRINCE/
+!mods/prince/
 
 # Debug files
 *.dSYM/

@@ -33,7 +33,7 @@ The authors of this program may be contacted at https://forum.princed.org
 
 // CustomLogic
 extern short rewind_timer INIT(= 0);
-extern short pause_timer INIT(= 0);
+extern short wasted_timer INIT(= 0);
 extern short rewind_storer INIT(= 0);
 extern short frame_storer INIT(= 1);
 extern short frame_player INIT(= 0);

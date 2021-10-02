@@ -1955,7 +1955,13 @@ void __pascal far free_peels() {
 // seg008:2644
 void __pascal far display_text_bottom(const char near *text) {
 	draw_rect(&rect_bottom_text, 0);
-	show_text(&rect_bottom_text, 0, 1, text);
+	// CustomLogic
+	if (wasted_timer == 1) {
+		show_text_with_color(&rect_bottom_text, 0, 1, text, color_12_brightred);
+	}
+	else {
+		show_text(&rect_bottom_text, 0, 1, text);
+	}
 #ifndef USE_TEXT
 	SDL_WM_SetCaption(text, NULL);
 #endif
