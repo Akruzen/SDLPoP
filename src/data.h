@@ -37,6 +37,7 @@ extern short wasted_timer INIT(= 0);
 extern short rewind_storer INIT(= 0);
 extern short frame_storer INIT(= 0);
 extern bool game_is_rewinding INIT(= false);
+extern bool potion_animate INIT(= false);
 
 // CustomLogic
 extern byte rewind_frame_array[60];

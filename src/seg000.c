@@ -1143,7 +1143,7 @@ int __pascal far play_kid_frame() {
 		return 1;
 	}
 	if (Char.room != 0) {
-		if ((current_level == 9 && curr_room == 11) && game_is_rewinding)
+		if ((current_level == 9 && curr_room == 11 && game_is_rewinding))
 		{
 			if (rewind_timer != 0)
 			{

@@ -1929,7 +1929,7 @@ void __pascal far proc_get_object() { // CustomLogic
 						Opp.charid = seq_63_guard_stand_active;
 					}
 				}
-				else if (current_level == 9 & curr_room == 11)
+				else if (current_level == 9 && Char.room == 11)
 				{
 					rewind_timer = 60;
 					flash_color = color_14_brightyellow;
@@ -1978,6 +1978,14 @@ void __pascal far proc_get_object() { // CustomLogic
 					}
 					else if (current_level == 10 && curr_room == (1 || 8))
 					{
+						char hint[140];
+						snprintf(hint, sizeof(hint),
+							"The Rooms left of the door are auto generated.\n"
+						"In rare scenarios,");
+						show_dialog(hint);
+						snprintf(hint, sizeof(hint),
+							"if they are impossible to pass, restarting the level will help.");
+						show_dialog(hint);
 						create_random_room(10, 2, 2);
 						create_random_room(10, 4, 1);
 						get_tile(8, 0, 0);
@@ -2152,7 +2160,7 @@ void make_pillar(int room, int column, int row)
 	if ((row == 0) || ((get_tile(room, column, row_above) != tiles_0_empty) && (get_tile(room, column, row_above) != tiles_9_bigpillar_top)))
 	{
 		int rand_tile = rand();
-		if (rand_tile % 5 == 0)
+		if (rand_tile % 6 == 0)
 		{
 			get_tile(room, column, row);
 			curr_room_tiles[curr_tilepos] = tiles_3_pillar;
@@ -2251,14 +2259,14 @@ void make_Torch_Debris(int room, int column, int row)
 {
 	int right_of_column = column + 1;
 	int rand_tile = rand();
-	if ((get_tile(room, column, row) == tiles_1_floor) && (rand_tile % 4 == 0) &&
+	if ((get_tile(room, column, row) == tiles_1_floor) && (rand_tile % 5 == 0) &&
 		(get_tile(room, right_of_column, row) != tiles_20_wall) &&
 		(get_tile(room, right_of_column, row) != tiles_3_pillar))
 	{
 		get_tile(room, column, row);
 		curr_room_tiles[curr_tilepos] = tiles_19_torch;
 	}
-	if ((get_tile(room, column, row) == tiles_1_floor) && (rand_tile % 3 == 0))
+	if ((get_tile(room, column, row) == tiles_1_floor) && (rand_tile % 4 == 0))
 	{
 		get_tile(room, column, row);
 		curr_room_tiles[curr_tilepos] = tiles_14_debris;

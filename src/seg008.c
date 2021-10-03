@@ -654,6 +654,19 @@ void __pascal far draw_tile_anim() {
 					{
 						color = 8;
 					}
+					else if (current_level == 9 && curr_room == 11)
+					{
+						if (potion_animate)
+						{
+							color = 14;
+							potion_animate = false;
+						}
+						else
+						{
+							color = 13;
+							potion_animate = true;
+						}
+					}
 					else
 					{
 						color = 10; // green
@@ -1929,6 +1942,11 @@ void __pascal far show_level() {
 				break;
 			case 8:
 				display_text_bottom("8: MUTUAL UNDERSTANDING");
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
+			case 9:
+				display_text_bottom("9: THE SANDS OF TIME");
 				enable_lighting = 0;
 				need_full_redraw = 1;
 				break;

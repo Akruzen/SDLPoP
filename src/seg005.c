@@ -198,6 +198,7 @@ void __pascal far land() {
 				}
 			} else {
 				// fell 3 or more rows
+				stop_sounds();
 				play_sound(sound_1_falling); // falling
 		        is_screaming = 1;
 				goto loc_5F6C;
