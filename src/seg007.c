@@ -517,6 +517,8 @@ Possible values of trob_type:
 				curr_modifier = 0;
 				trob.type = -1;
 				play_sound(sound_14_leveldoor_closing); // level door closing
+				cash_at_start = cash_obtained;
+				cash_obtained = 0;
 			} else {
 				if (trob.type == 4 &&
 					(sound_flags & sfDigi)

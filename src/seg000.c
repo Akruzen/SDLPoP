@@ -229,6 +229,12 @@ void __pascal far start_game() {
 	} else {
 		init_game(start_level);
 	}
+	// CustomLogic
+	cash_at_start = 0;
+	cash_obtained = 0;
+	for (int i = 0; i < 15; i++) {
+		cash_array[i] = 0;
+	}
 }
 
 #ifdef USE_QUICKSAVE
@@ -331,6 +337,14 @@ int quick_process(process_func_type process_func) {
 	process(ctrl1_up);
 	process(ctrl1_down);
 	process(ctrl1_shift2);
+	// CustomLogic
+	process(cash_obtained);
+	process(cash_at_start);
+	process(cash_array);
+	process(enable_lighting);
+	process(is_blind_mode);
+	process(enable_music);
+	process(cheats_enabled);
 	// replay recording state
 #ifdef USE_REPLAY
 	process(curr_tick);
@@ -450,7 +464,8 @@ int quick_load() {
 void check_quick_op() {
 	if (!enable_quicksave) return;
 	if (need_quick_save) {
-		if (!is_feather_fall && quick_save()) {
+		// CustomLogic - Quicksave not allowed in rewind room
+		if ((!is_feather_fall && quick_save()) || ((current_level != 9) && curr_room != 11)) {
 			display_text_bottom("QUICKSAVE");
 		} else {
 			display_text_bottom("NO QUICKSAVE");
@@ -563,6 +578,10 @@ int __pascal far process_key() {
 		case SDL_SCANCODE_SPACE: // space
 			is_show_time = 1;
 		break;
+		// CustomLogic
+		case SDL_SCANCODE_M: // M - Money
+			show_Cash();
+		break;
 		case SDL_SCANCODE_A | WITH_CTRL: // ctrl-a
 			if (current_level != 15) {
 				stop_sounds();
@@ -596,6 +615,12 @@ int __pascal far process_key() {
 			need_show_text = 1;
 		break;
 		case SDL_SCANCODE_R | WITH_CTRL: // ctrl-r
+			// CustomLogic
+			cash_at_start = 0;
+			cash_obtained = 0;
+			for (int i = 0; i < 15; i++) {
+				cash_array[i] = 0;
+			}
 			start_level = -1;
 #ifdef USE_MENU
 			if (is_menu_shown) menu_was_closed(); // Do necessary cleanup.
@@ -666,7 +691,13 @@ int __pascal far process_key() {
 #ifdef USE_QUICKSAVE
 		case SDL_SCANCODE_F6:
 		case SDL_SCANCODE_F6 | WITH_SHIFT:
-			if (Kid.alive < 0) need_quick_save = 1;
+			if (current_level == 9 && curr_room == 11)
+			{
+				display_text_bottom("NO QUICKSAVE");
+				text_time_remaining = 24;
+				text_time_total = 24;
+			}
+			else if (Kid.alive < 0) need_quick_save = 1;
 		break;
 		case SDL_SCANCODE_F9:
 		case SDL_SCANCODE_F9 | WITH_SHIFT:
@@ -686,6 +717,11 @@ int __pascal far process_key() {
 #endif // USE_QUICKSAVE
 	}
 	if (cheats_enabled) {
+		// CustomLogic
+		int total_cash = 0;
+		for (int i = 0; i <= current_level; i++) {
+			total_cash += cash_array[i];
+		}
 		switch (key) {
 			case SDL_SCANCODE_C: // c
 				snprintf(sprintf_temp, sizeof(sprintf_temp), "S%d L%d R%d A%d B%d", drawn_room, room_L, room_R, room_A, room_B);
@@ -737,6 +773,17 @@ int __pascal far process_key() {
 				guardhp_delta = -guardhp_curr;
 				Guard.alive = 0;
 			break;
+			// CustomLogic
+			case SDL_SCANCODE_9: // Decrease Cash
+				if ((cash_obtained + total_cash) > 0)
+					--cash_obtained;
+				show_Cash();
+				break;
+			case SDL_SCANCODE_0: // Increase Cash
+				if ((cash_obtained + total_cash) < 500)
+					++cash_obtained;
+				show_Cash();
+				break;
 			case SDL_SCANCODE_I | WITH_SHIFT: // shift+I --> invert cheat
 				toggle_upside();
 			break;
@@ -795,6 +842,66 @@ int __pascal far process_key() {
 		text_time_remaining = 24;
 	}
 	return 1;
+}
+
+// CustomLogic
+void show_Cash()
+{
+	showing_cash = true;
+	int total_cash = 0;
+	for (int i = 0; i <= current_level; i++) {
+		total_cash += cash_array[i];
+	}
+	char hint[140];
+	snprintf(hint, sizeof(hint),
+		"CASH: $%d", (cash_obtained + total_cash));
+	display_text_bottom(hint);
+	text_time_remaining = 24;
+	text_time_total = 24;
+	showing_cash = false;
+}
+
+// CustomLogic
+void obtained_Cash()
+{
+	/*
+	Number of Guards per Level
+	1 = 2
+	2 = 7
+	4 = 7
+	5 = 4
+	6 = 2
+	7 = 5
+	8 = 5
+	9 = 6
+	*/
+	showing_cash = true;
+	int looted_amount;
+	int rand_cash = rand();
+	if ((rand_cash % 5) == 0)
+	{
+		cash_obtained += 20;
+		//cash_array[current_level] += 2;
+		looted_amount = 20;
+	}
+	else if ((rand_cash % 3) == 0)
+	{
+		cash_obtained += 10;
+		looted_amount = 10;
+	}
+	else
+	{
+		cash_obtained += 5;
+		//cash_array[current_level] = cash_array[current_level] + 1;
+		looted_amount = 5;
+	}
+	char hint[140];
+	snprintf(hint, sizeof(hint),
+		"LOOTED $%d", looted_amount);
+	display_text_bottom(hint);
+	text_time_remaining = 24;
+	text_time_total = 24;
+	showing_cash = false;
 }
 
 // seg000:08EB

@@ -243,7 +243,6 @@ void __pascal far redraw_screen(int drawing_different_room) {
 	if (drawing_different_room) {
 		draw_rect(&rect_top, 0);
 	}
-
 	different_room = 0;
 	if (is_blind_mode) {
 		draw_rect(&rect_top, 0);
@@ -378,6 +377,8 @@ int __pascal far play_level_2() {
 #endif
 
 		if (is_restart_level) {
+			cash_obtained = 0;
+			cash_array[current_level] = 0;
 			is_restart_level = 0;
 			return current_level;
 		} else {
@@ -387,6 +388,7 @@ int __pascal far play_level_2() {
 				remove_flash_if_hurt();
 				do_simple_wait(timer_1);
 			} else {
+				cash_array[current_level - 1] += cash_obtained;
 				stop_sounds();
 				hitp_beg_lev = hitp_max;
 				checkpoint = 0;
@@ -503,7 +505,7 @@ void __pascal far timers() {
 		--wasted_timer; // CustomLogic
 	}
 	if (wasted_timer == 1) {
-		if (Char.alive > 0)
+		if (Char.alive > 0) // CustomLogic
 		{
 			display_text_bottom("WASTED");
 			text_time_remaining = 24;

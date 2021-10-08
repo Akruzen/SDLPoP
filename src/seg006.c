@@ -1322,6 +1322,8 @@ void __pascal far play_guard() {
 			if (guardhp_curr == 0) {
 				Char.alive = 0;
 				on_guard_killed();
+				if (current_level != 3)
+					obtained_Cash();
 			} else {
 				goto loc_7A65;
 			}
@@ -1884,7 +1886,7 @@ void __pascal far proc_get_object() { // CustomLogic
 							break;
 
 					}
-					if (current_level == 6 && curr_room == 12)
+					if (current_level == 6 && curr_room == (12 || 17))
 					{
 						snprintf(hint, sizeof(hint),
 							"HINT:\n"
@@ -1894,6 +1896,10 @@ void __pascal far proc_get_object() { // CustomLogic
 					{
 						show_dialog(hint);
 					}
+				}
+				else if (current_level == 10 && curr_room == 7)
+				{
+					show_TraderDialogBox();
 				}
 				else if (current_level == 4)
 				{
@@ -1991,6 +1997,31 @@ void __pascal far proc_get_object() { // CustomLogic
 						get_tile(8, 0, 0);
 						trigger_button(0, 0, -1);
 					}
+					else if (current_level == 10 && curr_room == 7)
+					{
+						int total_cash = 0;
+						for (int i = 0; i <= current_level; i++) {
+							total_cash += cash_array[i];
+						}
+						if ((cash_obtained + total_cash) >= 200) {
+							cash_obtained -= 200;
+							showing_cash = true;
+							display_text_bottom("SPENT $200");
+							text_time_remaining = 24;
+							text_time_total = 24;
+							showing_cash = false;
+							feather_fall();
+						}
+						else {
+							play_sound(sound_13_kid_hurt);
+							hitp_delta = -1;
+							showing_cash = true;
+							display_text_bottom("NOT ENOUGH CASH");
+							text_time_remaining = 24;
+							text_time_total = 24;
+							showing_cash = false;
+						}
+					}
 					else
 					{
 						play_sound(sound_13_kid_hurt); // Kid hurt (by potion)
@@ -2000,6 +2031,23 @@ void __pascal far proc_get_object() { // CustomLogic
 			break;
 		}
 	}
+}
+
+// CustomLogic
+void show_TraderDialogBox()
+{
+	char hint[140];
+	snprintf(hint, sizeof(hint),
+		"TRADER:\n"
+		"For $200, I can give you weightless potion effect.");
+	show_dialog(hint);
+	snprintf(hint, sizeof(hint),
+		"TRADER:\n"
+		"This way, you will be able to make this jump.");
+	show_dialog(hint);
+	snprintf(hint, sizeof(hint),
+		"Do you wish to trade slow fall effect for $200? If yes, drink the blue potion.");
+	show_dialog(hint);
 }
 
 //CustomLogic

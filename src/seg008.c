@@ -642,7 +642,7 @@ void __pascal far draw_tile_anim() {
 					else if ((current_level == 3 && (curr_room == 12 || curr_room == 22)) ||
 						(current_level == 6 && (curr_room == 19 || curr_room == 12)) ||
 						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 1 || curr_room == 7)) || 
-						(current_level == 8 && curr_room == 2))
+						(current_level == 8 && curr_room == 2) || (current_level == 10 && curr_room == 7))
 					{
 						color = 11;
 					}
@@ -1950,6 +1950,11 @@ void __pascal far show_level() {
 				enable_lighting = 0;
 				need_full_redraw = 1;
 				break;
+			case 10:
+				display_text_bottom("10: THE TRADER");
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
 		}
 		is_show_time = 1;
 	}
@@ -1976,6 +1981,9 @@ void __pascal far display_text_bottom(const char near *text) {
 	// CustomLogic
 	if (wasted_timer == 1) {
 		show_text_with_color(&rect_bottom_text, 0, 1, text, color_12_brightred);
+	}
+	else if (showing_cash) {
+		show_text_with_color(&rect_bottom_text, 0, 1, text, color_14_brightyellow);
 	}
 	else {
 		show_text(&rect_bottom_text, 0, 1, text);

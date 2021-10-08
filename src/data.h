@@ -40,6 +40,12 @@ extern bool game_is_rewinding INIT(= false);
 extern bool potion_animate INIT(= false);
 
 // CustomLogic
+extern short cash_at_start INIT(= 0);
+extern short cash_obtained INIT(= 0);
+extern bool showing_cash INIT(= false);
+extern short cash_array[15] INIT(= {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+
+// CustomLogic
 extern byte rewind_frame_array[60];
 extern byte rewind_XPos_array[60];
 extern byte rewind_YPos_array[60];
