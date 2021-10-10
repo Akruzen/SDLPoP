@@ -379,6 +379,13 @@ int __pascal far play_level_2() {
 		if (is_restart_level) {
 			cash_obtained = 0;
 			cash_array[current_level] = 0;
+			if (current_level == 11)
+			{
+				room_getter = 2;
+				column_getter = 1;
+				reverse_iterating = false;
+				mario_timer = 24;
+			}
 			is_restart_level = 0;
 			return current_level;
 		} else {
@@ -392,6 +399,10 @@ int __pascal far play_level_2() {
 				stop_sounds();
 				hitp_beg_lev = hitp_max;
 				checkpoint = 0;
+				// CustomLogic
+				if (next_level == 11) {
+					mario_timer = 48;
+				}
 
 				#ifdef USE_REPLAY
 				if (keep_last_seed == -1) {
@@ -504,12 +515,30 @@ void __pascal far timers() {
 	if (wasted_timer > 0) {
 		--wasted_timer; // CustomLogic
 	}
+	if (mario_timer > 0) {
+		--mario_timer; // CustomLogic
+	}
 	if (wasted_timer == 1) {
 		if (Char.alive > 0) // CustomLogic
 		{
 			display_text_bottom("WASTED");
 			text_time_remaining = 24;
 			text_time_total = 24;
+		}
+	}
+	if (mario_timer == 1) {
+		if (current_level == 11)
+		{
+			if (!reverse_iterating)
+			{
+				room_iterator();
+				play_sound(sound_51_princess_door_opening);
+			}
+			else
+			{
+				reverse_room_iterator();
+				play_sound(sound_51_princess_door_opening);
+			}
 		}
 	}
 	if (current_level == 9 && curr_room == 11 && !game_is_rewinding)
@@ -555,6 +584,151 @@ void __pascal far timers() {
 			do_mouse();
 		}
 	}
+}
+
+// CustomLogic
+void room_iterator()
+{
+	for (int j = 0; j < 3; j++) // Scans through all rows
+	{
+		for (int i = 1; i < 9; i++) // Scans through all columns
+		{
+			int left_of_column = i - 1;
+			curr_room_tiles[(tbl_line[j] + left_of_column)] = curr_room_tiles[(tbl_line[j] + i)];
+		}
+	}
+	for (int k = 0; k < 3; k++)
+	{
+		byte tile_1 = get_tile(room_getter, column_getter, k);
+		byte tile_1_modif = curr_room_modif[curr_tilepos];
+
+		get_tile(1, 8, k);
+		curr_room_tiles[curr_tilepos] = tile_1;
+		curr_room_modif[curr_tilepos] = tile_1_modif;
+		curr_room_tiles[(tbl_line[k] + 0)] = tiles_0_empty;
+		curr_room_tiles[(tbl_line[k] + 9)] = tiles_0_empty;
+	}
+	loadkid();
+	if (Char.direction == dir_FF_left)
+	{
+		Char.x = char_dx_forward(14); // a positive value would move him forward
+		determine_col();
+	}
+	else
+	{
+		Char.x = char_dx_forward(-14); // if he is facing right
+		determine_col();
+	}
+	savekid();
+	column_getter++;
+	if (column_getter == 9)
+	{
+		room_getter++;
+		column_getter = 1;
+	}
+	if ((room_getter > 2) && (room_getter < 4))
+	{
+		mario_timer = 18;
+	}
+	else if ((room_getter > 3) && (room_getter < 7))
+	{
+		mario_timer = 12;
+	}
+	else if ((room_getter > 6) && (room_getter < 12))
+	{
+		mario_timer = 5;
+	}
+	else if (room_getter == 12)
+	{
+		mario_timer = 48;
+		room_getter = room_getter - 2;
+		column_getter = 8;
+		reverse_iterating = true;
+	}
+	else
+	{
+		mario_timer = 24;
+	}
+	need_full_redraw = 1;
+}
+
+// CustomLogic
+void reverse_room_iterator()
+{
+	for (int j = 0; j < 3; j++) // Scans through all rows
+	{
+		for (int i = 8; i > 0; i--) // Scans through all columns
+		{
+			int right_of_column = i + 1;
+			curr_room_tiles[(tbl_line[j] + right_of_column)] = curr_room_tiles[(tbl_line[j] + i)];
+		}
+	}
+	for (int k = 0; k < 3; k++)
+	{
+		byte tile_1 = get_tile(room_getter, column_getter, k);
+		byte tile_1_modif = curr_room_modif[curr_tilepos];
+
+		get_tile(1, 1, k);
+		curr_room_tiles[curr_tilepos] = tile_1;
+		curr_room_modif[curr_tilepos] = tile_1_modif;
+		curr_room_tiles[(tbl_line[k] + 0)] = tiles_0_empty;
+		curr_room_tiles[(tbl_line[k] + 9)] = tiles_0_empty;
+	}
+	loadkid();
+	if (Char.direction == dir_FF_left)
+	{
+		Char.x = char_dx_forward(-14); // if he is facing left
+		determine_col();
+	}
+	else
+	{
+		Char.x = char_dx_forward(14); // if he is facing right
+		determine_col();
+	}
+	savekid();
+	column_getter--;
+	if (column_getter == 0)
+	{
+		room_getter--;
+		column_getter = 8;
+	}
+	if (room_getter == 10)
+	{
+		mario_timer = 18;
+	}
+	else if ((room_getter > 5) && (room_getter < 10))
+	{
+		mario_timer = 5;
+	}
+	else if (room_getter == 4)
+	{
+		mario_timer = 18;
+	}
+	else if (room_getter == 3)
+	{
+		mario_timer = 5;
+	}
+	else if (room_getter == 2)
+	{
+		mario_timer = 18;
+	}
+	else if (room_getter == 1)
+	{
+		mario_timer = 0;
+		get_tile(23, 2, 1);
+		curr_room_tiles[curr_tilepos] = tiles_11_loose;
+		get_tile(23, 3, 1);
+		curr_room_tiles[curr_tilepos] = tiles_11_loose;
+		get_tile(23, 7, 1);
+		curr_room_tiles[curr_tilepos] = tiles_1_floor;
+		get_tile(23, 8, 1);
+		curr_room_tiles[curr_tilepos] = tiles_1_floor;
+	}
+	else
+	{
+		mario_timer = 24;
+	}
+	need_full_redraw = 1;
 }
 
 // seg003:0798

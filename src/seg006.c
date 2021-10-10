@@ -1221,7 +1221,7 @@ void __pascal far play_kid() {
 					current_level != 15 // no message if died on potions level
 				) {
 					text_time_remaining = text_time_total = 288;
-					display_text_bottom("Press Enter");
+					display_text_bottom("PRESS ENTER");
 				} else {
 					text_time_remaining = text_time_total = 36;
 				}
@@ -2003,10 +2003,10 @@ void __pascal far proc_get_object() { // CustomLogic
 						for (int i = 0; i <= current_level; i++) {
 							total_cash += cash_array[i];
 						}
-						if ((cash_obtained + total_cash) >= 200) {
-							cash_obtained -= 200;
+						if ((cash_obtained + total_cash) >= 400) {
+							cash_obtained -= 400;
 							showing_cash = true;
-							display_text_bottom("SPENT $200");
+							display_text_bottom("SPENT $400");
 							text_time_remaining = 24;
 							text_time_total = 24;
 							showing_cash = false;
@@ -2039,14 +2039,14 @@ void show_TraderDialogBox()
 	char hint[140];
 	snprintf(hint, sizeof(hint),
 		"TRADER:\n"
-		"For $200, I can give you weightless potion effect.");
+		"For $400, I can give you weightless potion effect.");
 	show_dialog(hint);
 	snprintf(hint, sizeof(hint),
 		"TRADER:\n"
 		"This way, you will be able to make this jump.");
 	show_dialog(hint);
 	snprintf(hint, sizeof(hint),
-		"Do you wish to trade slow fall effect for $200? If yes, drink the blue potion.");
+		"Do you wish to trade slow fall effect for $400? If yes, drink the blue potion.");
 	show_dialog(hint);
 }
 

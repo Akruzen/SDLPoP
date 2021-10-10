@@ -1955,6 +1955,11 @@ void __pascal far show_level() {
 				enable_lighting = 0;
 				need_full_redraw = 1;
 				break;
+			case 11:
+				display_text_bottom("11: TREADMILL TWO POINT OH");
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
 		}
 		is_show_time = 1;
 	}

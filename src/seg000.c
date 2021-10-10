@@ -341,6 +341,10 @@ int quick_process(process_func_type process_func) {
 	process(cash_obtained);
 	process(cash_at_start);
 	process(cash_array);
+	process(mario_timer);
+	process(room_getter);
+	process(column_getter);
+	process(reverse_iterating);
 	process(enable_lighting);
 	process(is_blind_mode);
 	process(enable_music);

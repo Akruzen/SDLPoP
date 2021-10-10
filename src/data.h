@@ -34,6 +34,7 @@ The authors of this program may be contacted at https://forum.princed.org
 // CustomLogic
 extern short rewind_timer INIT(= 0);
 extern short wasted_timer INIT(= 0);
+extern int mario_timer INIT(= 0); // Speed of motion for level 11
 extern short rewind_storer INIT(= 0);
 extern short frame_storer INIT(= 0);
 extern bool game_is_rewinding INIT(= false);
@@ -51,7 +52,10 @@ extern byte rewind_XPos_array[60];
 extern byte rewind_YPos_array[60];
 extern sbyte rewind_Kid_Direction[60];
 
-// CustomLogic Kid_Direction
+// CustomLogic Mario
+extern short room_getter INIT(= 2);
+extern short column_getter INIT(= 1);
+extern bool reverse_iterating INIT(= false);
 
 // data:5F8A
 extern word text_time_remaining;
