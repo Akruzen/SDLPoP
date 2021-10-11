@@ -89,6 +89,13 @@ void __pascal far check_shadow() {
 			do_init_shad(/*&*/custom->init_shad_6, 2 /*stand*/);
 			return;
 		}
+	} else if (current_level == 13) {
+		// CustomLogic: Special event: level 12 shadow
+		Char.room = drawn_room;
+		if (Char.room == 23) {
+			do_init_shad(/*&*/custom->init_shad_6, 2 /*stand*/);
+			return;
+		}
 	} else if (current_level == 5) {
 		// Special event: level 5 shadow
 		Char.room = drawn_room;

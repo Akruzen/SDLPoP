@@ -39,6 +39,7 @@ extern short rewind_storer INIT(= 0);
 extern short frame_storer INIT(= 0);
 extern bool game_is_rewinding INIT(= false);
 extern bool potion_animate INIT(= false);
+extern bool kid_is_visible INIT(= true);
 
 // CustomLogic
 extern short cash_at_start INIT(= 0);

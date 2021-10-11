@@ -341,10 +341,19 @@ int quick_process(process_func_type process_func) {
 	process(cash_obtained);
 	process(cash_at_start);
 	process(cash_array);
+	process(rewind_storer);
+	process(frame_storer);
+	process(game_is_rewinding);
+	process(rewind_frame_array);
+	process(rewind_XPos_array);
+	process(rewind_YPos_array);
+	process(rewind_Kid_Direction);
 	process(mario_timer);
+	process(wasted_timer);
 	process(room_getter);
 	process(column_getter);
 	process(reverse_iterating);
+	process(kid_is_visible);
 	process(enable_lighting);
 	process(is_blind_mode);
 	process(enable_music);
@@ -787,6 +796,13 @@ int __pascal far process_key() {
 				if ((cash_obtained + total_cash) < 500)
 					++cash_obtained;
 				show_Cash();
+				break;
+			case SDL_SCANCODE_P:
+				if (kid_is_visible)
+					kid_is_visible = false;
+				else
+					kid_is_visible = true;
+				draw_people();
 				break;
 			case SDL_SCANCODE_I | WITH_SHIFT: // shift+I --> invert cheat
 				toggle_upside();

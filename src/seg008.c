@@ -667,6 +667,19 @@ void __pascal far draw_tile_anim() {
 							potion_animate = true;
 						}
 					}
+					else if (current_level == 12 && (curr_room == 3 || curr_room == 16))
+					{
+						if (potion_animate)
+						{
+							color = 9;
+							potion_animate = false;
+						}
+						else
+						{
+							color = 12;
+							potion_animate = true;
+						}
+					}
 					else
 					{
 						color = 10; // green
@@ -1691,7 +1704,9 @@ int __pascal far load_obj_from_objtable(int index) {
 // seg008:228A
 void __pascal far draw_people() {
 	check_mirror();
-	draw_kid();
+	// CustomLogic
+	if (kid_is_visible)
+		draw_kid();
 	draw_guard();
 	reset_obj_clip();
 	draw_hp();
@@ -1957,6 +1972,11 @@ void __pascal far show_level() {
 				break;
 			case 11:
 				display_text_bottom("11: TREADMILL TWO POINT OH");
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
+			case 12:
+				display_text_bottom("12: NOW YOU SEE ME");
 				enable_lighting = 0;
 				need_full_redraw = 1;
 				break;

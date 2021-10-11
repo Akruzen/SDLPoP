@@ -1869,16 +1869,16 @@ void __pascal far proc_get_object() { // CustomLogic
 							break;
 						case 2:
 							snprintf(hint, sizeof(hint),
-								"Guard: Hey! I can help you!\n"
-								"Prince: And how exactly?");
+								"Prince: You there! My sword is ready to taste your blood!\n"
+								"Guard: Please spare me!");
 							show_dialog(hint);
 							snprintf(hint, sizeof(hint),
-								"Guard: I can press these buttons for you!\n"
-								"Prince: Oh thank you :)");
+								"Prince: And why would I do that?\n"
+								"Guard: I can open the gates for you!");
 							show_dialog(hint);
 							snprintf(hint, sizeof(hint),
-								"Guard: But in return, spare me please!\n"
-								"Prince: Ok, I won't hurt you.");
+								"Prince: The deal is not quite bad. Fine. But don't do anything stupid, else..\n"
+								"Guard: No I won't!");
 							show_dialog(hint);
 							snprintf(hint, sizeof(hint),
 								"Use A and D keys to move guard.\n");
@@ -1942,6 +1942,32 @@ void __pascal far proc_get_object() { // CustomLogic
 					flash_time = 60;
 					play_sound(sound_28_death_in_fight);
 					game_is_rewinding = true;
+				}
+				else if (current_level == 12 && curr_room == 3)
+				{
+				char hint[140];
+				snprintf(hint, sizeof(hint),
+					"HINT:\n"
+					"Gauge Prince's position by hearing his footsteps and the environment's"
+					" reactions.");
+				show_dialog(hint);
+				play_sound(sound_25_presentation);
+				display_text_bottom("NOW YOU DON'T");
+				text_time_remaining = 24;
+				text_time_total = 24;
+				kid_is_visible = false;
+				draw_people();
+				get_tile(4, 7, 0);
+				trigger_button(0, 0, -1);
+				}
+				else if (current_level == 12 && curr_room == 16)
+				{
+					stop_sounds();
+					play_sound(sound_25_presentation);
+					kid_is_visible = true;
+					draw_people();
+					get_tile(21, 6, 2);
+					trigger_button(0, 0, -1);
 				}
 				else
 				{

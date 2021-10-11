@@ -379,6 +379,7 @@ int __pascal far play_level_2() {
 		if (is_restart_level) {
 			cash_obtained = 0;
 			cash_array[current_level] = 0;
+			kid_is_visible = true;
 			if (current_level == 11)
 			{
 				room_getter = 2;
@@ -567,6 +568,26 @@ void __pascal far timers() {
 			rewind_YPos_array[frame_storer] = Char.y;
 			rewind_Kid_Direction[frame_storer] = Char.direction;
 			frame_storer++;
+		}
+	}
+	if (current_level == 13)
+	{
+		int rand_skill = rand();
+		if (rand_skill % 5 == 0)
+		{
+			guard_skill = 7;
+		}
+		else if (rand_skill % 4 == 0)
+		{
+			guard_skill = 1;
+		}
+		else if (rand_skill % 3 == 0)
+		{
+			guard_skill = 3;
+		}
+		else
+		{
+			guard_skill = 0;
 		}
 	}
 	if (is_feather_fall && !check_sound_playing()) {
