@@ -1714,12 +1714,16 @@ void __pascal far draw_people() {
 
 // seg008:22A2
 void __pascal far draw_kid() {
-	if (Kid.room != 0 && Kid.room == drawn_room) {
-		add_kid_to_objtable();
-		if (hitp_delta < 0) {
-			draw_hurt_splash();
+	// CustomLogic
+	if (kid_is_visible)
+	{
+		if (Kid.room != 0 && Kid.room == drawn_room) {
+			add_kid_to_objtable();
+			if (hitp_delta < 0) {
+				draw_hurt_splash();
+			}
+			add_sword_to_objtable();
 		}
-		add_sword_to_objtable();
 	}
 }
 

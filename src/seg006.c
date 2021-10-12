@@ -1762,7 +1762,7 @@ void __pascal far proc_get_object() { // CustomLogic
 						hitp_delta = -1;
 					}
 				}
-				else if (hitp_curr != hitp_max) {
+				else if ((hitp_curr != hitp_max) && !panic_button_pressed) {
 					stop_sounds();
 					play_sound(sound_33_small_potion); // small potion
 					hitp_delta = 1;
@@ -1786,7 +1786,7 @@ void __pascal far proc_get_object() { // CustomLogic
 					get_tile(3, 3, 3);
 					trigger_button(0, 0, -1);
 				}
-				else
+				else if (!panic_button_pressed)
 				{
 					stop_sounds();
 					play_sound(sound_30_big_potion); // big potion
@@ -1801,7 +1801,7 @@ void __pascal far proc_get_object() { // CustomLogic
 					toggle_upside();
 					feather_fall();
 				}
-				else
+				else if (current_level != 12 && !panic_button_pressed)
 				{
 					feather_fall();
 				}
@@ -1947,16 +1947,28 @@ void __pascal far proc_get_object() { // CustomLogic
 				{
 				char hint[140];
 				snprintf(hint, sizeof(hint),
-					"HINT:\n"
-					"Gauge Prince's position by hearing his footsteps and the environment's"
-					" reactions.");
+					"Evil Jaffar tricked Prince into drinking an invisibility potion.");
+				show_dialog(hint);
+				snprintf(hint, sizeof(hint),
+					" This made him invisible to everyone except his royal defences, guards and Jaffar himself.");
+				show_dialog(hint);
+				snprintf(hint, sizeof(hint),
+					"Fortunately, Prince had two panic potions given to him by a wise old man back when he was in the prison.");
+				show_dialog(hint);
+				snprintf(hint, sizeof(hint),
+					"Soon, he discovers that they make him visible again for a few seconds.\n");
+				show_dialog(hint);
+				snprintf(hint, sizeof(hint),
+					"You have 2 Panic Potions. Press E to drink them. Use them wisely.");
 				show_dialog(hint);
 				play_sound(sound_25_presentation);
+				panic_potion_drinkable = true;
+				panic_potion_count = 2;
 				display_text_bottom("NOW YOU DON'T");
 				text_time_remaining = 24;
 				text_time_total = 24;
 				kid_is_visible = false;
-				draw_people();
+				draw_kid();
 				get_tile(4, 7, 0);
 				trigger_button(0, 0, -1);
 				}
@@ -1965,13 +1977,13 @@ void __pascal far proc_get_object() { // CustomLogic
 					stop_sounds();
 					play_sound(sound_25_presentation);
 					kid_is_visible = true;
-					draw_people();
+					draw_kid();
 					get_tile(21, 6, 2);
 					trigger_button(0, 0, -1);
 				}
 				else
 				{
-					if (current_level != 6)
+					if (current_level != 6 && !panic_button_pressed)
 						toggle_upside();
 				}
 			break;
@@ -2048,7 +2060,7 @@ void __pascal far proc_get_object() { // CustomLogic
 							showing_cash = false;
 						}
 					}
-					else
+					else if (!panic_button_pressed)
 					{
 						play_sound(sound_13_kid_hurt); // Kid hurt (by potion)
 						hitp_delta = -1;

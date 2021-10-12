@@ -387,6 +387,13 @@ int __pascal far play_level_2() {
 				reverse_iterating = false;
 				mario_timer = 24;
 			}
+			if (current_level == 12)
+			{
+				panic_potion_timer = 0;
+				panic_potion_count = 0;
+				panic_potion_drinkable = false;
+				panic_potion_drank = false;
+			}
 			is_restart_level = 0;
 			return current_level;
 		} else {
@@ -518,6 +525,15 @@ void __pascal far timers() {
 	}
 	if (mario_timer > 0) {
 		--mario_timer; // CustomLogic
+	}
+	if (panic_potion_timer > 0) {
+		--panic_potion_timer; // CustomLogic
+	}
+	if (panic_potion_timer == 1 && panic_potion_drank) {
+		play_sound(sound_25_presentation);
+		kid_is_visible = false;
+		panic_potion_drank = false;
+		draw_kid();
 	}
 	if (wasted_timer == 1) {
 		if (Char.alive > 0) // CustomLogic

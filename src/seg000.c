@@ -354,6 +354,11 @@ int quick_process(process_func_type process_func) {
 	process(column_getter);
 	process(reverse_iterating);
 	process(kid_is_visible);
+	process(panic_potion_timer);
+	process(panic_potion_count);
+	process(panic_potion_drinkable);
+	process(panic_potion_drank);
+	process(panic_button_pressed);
 	process(enable_lighting);
 	process(is_blind_mode);
 	process(enable_music);
@@ -595,6 +600,10 @@ int __pascal far process_key() {
 		case SDL_SCANCODE_M: // M - Money
 			show_Cash();
 		break;
+		// CustomLogic
+		case SDL_SCANCODE_E: // Drink Panic Potion
+			drink_panic_potion();
+			break;
 		case SDL_SCANCODE_A | WITH_CTRL: // ctrl-a
 			if (current_level != 15) {
 				stop_sounds();
@@ -802,7 +811,7 @@ int __pascal far process_key() {
 					kid_is_visible = false;
 				else
 					kid_is_visible = true;
-				draw_people();
+				draw_kid();
 				break;
 			case SDL_SCANCODE_I | WITH_SHIFT: // shift+I --> invert cheat
 				toggle_upside();
@@ -862,6 +871,48 @@ int __pascal far process_key() {
 		text_time_remaining = 24;
 	}
 	return 1;
+}
+
+// CustomLogic
+
+void drink_panic_potion()
+{
+	if (current_level == 12 && panic_potion_drinkable)
+	{
+		if (panic_potion_count > 0)
+		{
+			if (!kid_is_visible)
+			{
+				panic_potion_timer = 150;
+				kid_is_visible = true;
+				panic_potion_drank = true;
+				panic_button_pressed = true;
+				--panic_potion_count;
+				draw_kid();
+				stop_sounds();
+				play_sound(sound_18_drink);
+				panic_button_pressed = false;
+				char hint[140];
+				snprintf(hint, sizeof(hint),
+					"%d PANIC POTIONS LEFT", panic_potion_count);
+				display_text_bottom(hint);
+				text_time_remaining = 24;
+				text_time_total = 24;
+			}
+			else
+			{
+				display_text_bottom("ALREADY VISIBLE");
+				text_time_remaining = 24;
+				text_time_total = 24;
+			}
+		}
+		else
+		{
+			display_text_bottom("NO PANIC POTIONS LEFT");
+			text_time_remaining = 24;
+			text_time_total = 24;
+		}
+	}
 }
 
 // CustomLogic
@@ -1506,13 +1557,17 @@ void __pascal far draw_guard_hp(short curr_hp,short max_hp) {
 
 // seg000:11EC
 void __pascal far add_life() {
-	short hpmax = hitp_max;
-	++hpmax;
-	// CusPop: set maximum number of hitpoints (max_hitp_allowed, default = 10)
-	if (hpmax > 15) hpmax = 15; // original
-//	if (hpmax > custom->max_hitp_allowed) hpmax = custom->max_hitp_allowed;
-	hitp_max = hpmax;
-	set_health_life();
+	// CustomLogic
+	if (!panic_button_pressed)
+	{
+		short hpmax = hitp_max;
+		++hpmax;
+		// CusPop: set maximum number of hitpoints (max_hitp_allowed, default = 10)
+		if (hpmax > 15) hpmax = 15; // original
+	//	if (hpmax > custom->max_hitp_allowed) hpmax = custom->max_hitp_allowed;
+		hitp_max = hpmax;
+		set_health_life();
+	}
 }
 
 // seg000:1200
@@ -1869,17 +1924,24 @@ void __pascal far copy_screen_rect(const rect_type far *source_rect_ptr) {
 
 // seg000:15E9
 void __pascal far toggle_upside() {
-	upside_down = ~ upside_down;
-	need_redraw_because_flipped = 1;
+	// CustomLogic
+	if (!panic_button_pressed)
+	{
+		upside_down = ~upside_down;
+		need_redraw_because_flipped = 1;
+	}
 }
 
 // seg000:15F8
 void __pascal far feather_fall() {
-	is_feather_fall = 1;
-	flash_color = 2; // green
-	flash_time = 3;
-	stop_sounds();
-	play_sound(sound_39_low_weight); // low weight
+	if (!panic_button_pressed)
+	{
+		is_feather_fall = 1;
+		flash_color = 2; // green
+		flash_time = 3;
+		stop_sounds();
+		play_sound(sound_39_low_weight); // low weight
+	}
 }
 
 // seg000:1618

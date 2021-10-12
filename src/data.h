@@ -35,11 +35,16 @@ The authors of this program may be contacted at https://forum.princed.org
 extern short rewind_timer INIT(= 0);
 extern short wasted_timer INIT(= 0);
 extern int mario_timer INIT(= 0); // Speed of motion for level 11
+extern int panic_potion_timer INIT(= 0);
+extern int panic_potion_count INIT(= 0);
 extern short rewind_storer INIT(= 0);
 extern short frame_storer INIT(= 0);
 extern bool game_is_rewinding INIT(= false);
 extern bool potion_animate INIT(= false);
 extern bool kid_is_visible INIT(= true);
+extern bool panic_potion_drinkable INIT(= false);
+extern bool panic_potion_drank INIT(= false);
+extern bool panic_button_pressed INIT(= false);
 
 // CustomLogic
 extern short cash_at_start INIT(= 0);
