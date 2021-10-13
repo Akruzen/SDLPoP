@@ -359,6 +359,8 @@ int quick_process(process_func_type process_func) {
 	process(panic_potion_drinkable);
 	process(panic_potion_drank);
 	process(panic_button_pressed);
+	process(jaffar_revive_timer);
+	process(jaffar_kill_counter);
 	process(enable_lighting);
 	process(is_blind_mode);
 	process(enable_music);
@@ -713,7 +715,7 @@ int __pascal far process_key() {
 #ifdef USE_QUICKSAVE
 		case SDL_SCANCODE_F6:
 		case SDL_SCANCODE_F6 | WITH_SHIFT:
-			if (current_level == 9 && curr_room == 11)
+			if ((current_level == 9 && curr_room == 11) || (current_level == 13 && curr_room == 1))
 			{
 				display_text_bottom("NO QUICKSAVE");
 				text_time_remaining = 24;

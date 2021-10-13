@@ -301,34 +301,45 @@ void __pascal far animate_chomper() { //CustomLogic
 			// CustomLogic
 			int move_chomp_row = 0;
 			int mov_chomp_room = 2;
-			if (current_level == 5)
+			if (current_level == 5 || current_level == 13)
 			{
-				if (curr_room == 2)
+				if (current_level == 5)
 				{
-					move_chomp_row = 2;
-					mov_chomp_room = 2;
-				}
-				if (curr_room == 13)
-				{
-					move_chomp_row = 0;
-					mov_chomp_room = 13;
-				}
-				if (curr_room == 14)
-				{
-					move_chomp_row = 2;
-					mov_chomp_room = 14;
-				}
-				if (curr_room == 17)
-				{
-					if (char_top_row == 0 || char_top_row == -1)
-					{
-						move_chomp_row = 0;
-						mov_chomp_room = 17;
-					}
-					else
+					if (curr_room == 2)
 					{
 						move_chomp_row = 2;
-						mov_chomp_room = 17;
+						mov_chomp_room = 2;
+					}
+					if (curr_room == 13)
+					{
+						move_chomp_row = 0;
+						mov_chomp_room = 13;
+					}
+					if (curr_room == 14)
+					{
+						move_chomp_row = 2;
+						mov_chomp_room = 14;
+					}
+					if (curr_room == 17)
+					{
+						if (char_top_row == 0 || char_top_row == -1)
+						{
+							move_chomp_row = 0;
+							mov_chomp_room = 17;
+						}
+						else
+						{
+							move_chomp_row = 2;
+							mov_chomp_room = 17;
+						}
+					}
+				}
+				else if (current_level == 13)
+				{
+					if (Char.room == 23)
+					{
+						move_chomp_row = 1;
+						mov_chomp_room = 23;
 					}
 				}
 				if (get_tile(mov_chomp_room, 2, move_chomp_row) == tiles_14_debris)

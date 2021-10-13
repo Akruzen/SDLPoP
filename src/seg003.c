@@ -169,11 +169,24 @@ void __pascal far do_startpos() {
 		get_tile(5, 2, 0);
 		trigger_button(0, 0, -1);
 		seqtbl_offset_char(seq_7_fall); // fall
-	} else if (/*current_level == 13*/ custom->tbl_entry_pose[current_level] == 2) {
-		// Special event: running entry
-		seqtbl_offset_char(seq_84_run); // run
+		if (cheats_enabled)
+		{
+			char hint[140];
+			snprintf(hint, sizeof(hint),
+				"WARNING:\n"
+				"Cheats have been enabled. Some game functions might misbehave.");
+			show_dialog(hint);
+		}
 	} else {
 		seqtbl_offset_char(seq_5_turn); // turn
+		if (cheats_enabled)
+		{
+			char hint[140];
+			snprintf(hint, sizeof(hint),
+				"WARNING:\n"
+				"Cheats have been enabled. Some game functions might misbehave.");
+			show_dialog(hint);
+		}
 	}
 	set_start_pos();
 }
@@ -379,6 +392,7 @@ int __pascal far play_level_2() {
 		if (is_restart_level) {
 			cash_obtained = 0;
 			cash_array[current_level] = 0;
+			panic_potion_timer = 0;
 			kid_is_visible = true;
 			if (current_level == 11)
 			{
@@ -393,6 +407,11 @@ int __pascal far play_level_2() {
 				panic_potion_count = 0;
 				panic_potion_drinkable = false;
 				panic_potion_drank = false;
+			}
+			if (current_level == 13)
+			{
+				jaffar_kill_counter = 0;
+				jaffar_revive_timer = 0;
 			}
 			is_restart_level = 0;
 			return current_level;
@@ -529,6 +548,22 @@ void __pascal far timers() {
 	if (panic_potion_timer > 0) {
 		--panic_potion_timer; // CustomLogic
 	}
+	if (wait_music_timer > 0) {
+		--wait_music_timer;
+		if (wait_music_timer == 1)
+			play_sound(sound_43_victory_Jaffar);
+	}
+	if (jaffar_revive_timer > 0) {
+		--jaffar_revive_timer; // CustomLogic
+		if ((jaffar_revive_timer == 40) || (jaffar_revive_timer == 30) || (jaffar_revive_timer == 20) ||
+			(jaffar_revive_timer == 10) || (jaffar_revive_timer == 50) || (jaffar_revive_timer == 60) ||
+			(jaffar_revive_timer == 70) || (jaffar_revive_timer == 80))
+		{
+			flash_color = color_8_darkgray;
+			flash_time = 10;
+			++guardhp_delta;
+		}
+	}
 	if (panic_potion_timer == 1 && panic_potion_drank) {
 		play_sound(sound_25_presentation);
 		kid_is_visible = false;
@@ -584,26 +619,6 @@ void __pascal far timers() {
 			rewind_YPos_array[frame_storer] = Char.y;
 			rewind_Kid_Direction[frame_storer] = Char.direction;
 			frame_storer++;
-		}
-	}
-	if (current_level == 13)
-	{
-		int rand_skill = rand();
-		if (rand_skill % 5 == 0)
-		{
-			guard_skill = 7;
-		}
-		else if (rand_skill % 4 == 0)
-		{
-			guard_skill = 1;
-		}
-		else if (rand_skill % 3 == 0)
-		{
-			guard_skill = 3;
-		}
-		else
-		{
-			guard_skill = 0;
 		}
 	}
 	if (is_feather_fall && !check_sound_playing()) {

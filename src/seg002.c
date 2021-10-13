@@ -89,13 +89,6 @@ void __pascal far check_shadow() {
 			do_init_shad(/*&*/custom->init_shad_6, 2 /*stand*/);
 			return;
 		}
-	} else if (current_level == 13) {
-		// CustomLogic: Special event: level 12 shadow
-		Char.room = drawn_room;
-		if (Char.room == 23) {
-			do_init_shad(/*&*/custom->init_shad_6, 2 /*stand*/);
-			return;
-		}
 	} else if (current_level == 5) {
 		// Special event: level 5 shadow
 		Char.room = drawn_room;
@@ -983,8 +976,9 @@ void __pascal far hurt_by_sword() {
 			int hit_take_hp = 1;
 			if (hitp_max > 3)
 			{
-				if (random_take_hp%2 == 0)
+				if ((random_take_hp % 2 == 0) || (current_level == 13))
 				{
+					// Jaffar always strikes critical hits
 					hit_take_hp = 2;
 					if (Char.charid == charid_0_kid)
 					{
@@ -1010,6 +1004,42 @@ void __pascal far hurt_by_sword() {
 				if (current_level == 6 && curr_room == 12 && guardhp_curr == 1)
 				{
 					// Do nothing
+				}
+				else if (current_level == 13)
+				{
+					if (guardhp_curr == 1 && jaffar_kill_counter < 3)
+					{
+						++jaffar_kill_counter;
+						if (jaffar_kill_counter == 1) {
+							guard_skill = 6;
+						}
+						else if (jaffar_kill_counter == 2) {
+							guard_skill = 7;
+						}
+						else if (jaffar_kill_counter == 3) {
+							guard_skill = 10;
+						}
+						play_sound(sound_32_shadow_music);
+						flash_color = color_8_darkgray;
+						flash_time = 10;
+						jaffar_revive_timer = 90;
+
+						// Move Jaffar back
+						loadshad();
+						Char.x = x_bump[5 + 7] + 7;
+						Char.curr_col = 7;
+						saveshad();
+						play_seq();
+
+						// Move Prince back
+						Kid.curr_col = 2;
+						Kid.x = x_bump[2 + 5] + 2;
+						++guardhp_delta;
+					}
+					else
+					{
+						take_hp(1);
+					}
 				}
 				else if (take_hp(1))
 				{

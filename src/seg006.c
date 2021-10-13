@@ -625,7 +625,7 @@ void __pascal far play_seq() {
 
 						if (is_sound_on) {
 							if (current_level == 4) {
-								play_sound(sound_32_shadow_music); // end level with shadow (level 4)
+								play_sound(sound_41_end_level_music); // end level with shadow (level 4) CustomLogic - Normal Music only
 							} else if (current_level != 13 && current_level != 15) {
 								play_sound(sound_41_end_level_music); // end level
 							}
@@ -2410,7 +2410,7 @@ int __pascal far is_dead() {
 void __pascal far play_death_music() {
 	word sound_id;
 	if (Guard.charid == charid_1_shadow) {
-		sound_id = sound_32_shadow_music; // killed by shadow
+		sound_id = sound_24_death_regular; // killed by shadow
 	} 
 	else if (holding_sword) {
 		wasted_timer = 24;
@@ -2435,7 +2435,10 @@ void __pascal far on_guard_killed() {
 		flash_time = /*18*/ custom->jaffar_victory_flash_time;
 		is_show_time = 1;
 		leveldoor_open = 2;
-		play_sound(sound_43_victory_Jaffar); // Jaffar's death
+		wait_music_timer = 48;
+		if (Kid.alive < 0)
+			need_quick_save = 1;
+		// play_sound(sound_43_victory_Jaffar); // Jaffar's death
 	} else if (Char.charid != charid_1_shadow) {
 		play_sound(sound_37_victory); // Guard's death
 	}

@@ -287,8 +287,8 @@ void __pascal far init_ending_kid() {
 	Char.x = 198;
 	Char.y = 164;
 	Char.direction = dir_FF_left;
-	seqtbl_offset_char(seq_1_start_run); // start run
-	play_seq();
+	//seqtbl_offset_char(seq_1_start_run); // start run
+	//play_seq();
 }
 
 // seg001:034D
