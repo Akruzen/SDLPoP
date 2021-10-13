@@ -968,6 +968,11 @@ void obtained_Cash()
 		//cash_array[current_level] = cash_array[current_level] + 1;
 		looted_amount = 5;
 	}
+	if (current_level == 13 && curr_room == 1)
+	{
+		cash_obtained += 100;
+		looted_amount = 100;
+	}
 	char hint[140];
 	snprintf(hint, sizeof(hint),
 		"LOOTED $%d", looted_amount);

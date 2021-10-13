@@ -1689,10 +1689,11 @@ void __pascal far set_objtile_at_char() {
 
 // seg006:1463
 void __pascal far proc_get_object() { // CustomLogic
+	int pick_room = curr_room;
 	if (Char.charid != charid_0_kid) return;
 	if (pickup_obj_type == -1)
 	{
-		if (current_level == 4 && curr_room == 1)
+		if (current_level == 4 && pick_room == 1)
 		{
 			flash_color = color_13_brightmagenta;
 			flash_time = 8;
@@ -1725,11 +1726,12 @@ void __pascal far proc_get_object() { // CustomLogic
 		}
 	}
 	else {					// CustomLogic
+		char hint[140];
 		switch (--pickup_obj_type) {
 			case -1: // empty pot
 				if (current_level == 7)
 				{
-					switch (curr_room)
+					switch (pick_room)
 					{
 					case 4:
 						match_the_tiles(4, 5, 2, 0, 2);
@@ -1746,7 +1748,7 @@ void __pascal far proc_get_object() { // CustomLogic
 			case 0: // health
 				if (current_level == 2)
 				{
-					if (curr_room == 23)
+					if (pick_room == 23)
 					{
 						stop_sounds();
 						play_sound(sound_44_skel_alive);
@@ -1771,7 +1773,7 @@ void __pascal far proc_get_object() { // CustomLogic
 				}
 			break;
 			case 1: // life
-			    if (current_level == 2 && curr_room == 8) // CustomLogic
+			    if (current_level == 2 && pick_room == 8) // CustomLogic
 				{
 					stop_sounds();
 					play_sound(sound_25_presentation);
@@ -1796,7 +1798,7 @@ void __pascal far proc_get_object() { // CustomLogic
 				}
 			break;
 			case 2: // feather
-				if(current_level == 2 && curr_room == 16)
+				if(current_level == 2 && pick_room == 16)
 				{
 					toggle_upside();
 					feather_fall();
@@ -1808,13 +1810,13 @@ void __pascal far proc_get_object() { // CustomLogic
 			break;
 			case 3: // invert
 				// CustomLogic
-				if(current_level == 2 && curr_room == 17)
+				if(current_level == 2 && pick_room == 17)
 				{
 					flash_color = color_8_darkgray;
 					flash_time = 8;
 					take_hp(100);
 				}
-				else if (current_level == 3 && (curr_room == 6 || curr_room == 4))
+				else if (current_level == 3 && (pick_room == 6 || pick_room == 4))
 				{
 					flash_color = color_6_brown;
 					flash_time = 8;
@@ -1824,13 +1826,12 @@ void __pascal far proc_get_object() { // CustomLogic
 						enable_lighting = 0;
 					need_quick_save = 1;
 				}
-				else if ((current_level == 3 && (curr_room == 12 || curr_room == 22)) ||
-						(current_level == 6 && (curr_room == 19 || curr_room == 12)) || 
-						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 7 || curr_room == 1)) || 
-						current_level == 8 && curr_room == 2)
+				else if ((current_level == 3 && (pick_room == 12 || pick_room == 22)) ||
+						(current_level == 6 && (pick_room == 19 || pick_room == 12)) ||
+						(current_level == 5 && pick_room == 6) || (current_level == 7 && (pick_room == 4 || pick_room == 7 || pick_room == 1)) ||
+						current_level == 8 && pick_room == 2)
 				{
-					char hint[140];
-					switch (curr_room)
+					switch (pick_room)
 					{
 						case 12:
 							snprintf(hint, sizeof(hint),
@@ -1886,7 +1887,7 @@ void __pascal far proc_get_object() { // CustomLogic
 							break;
 
 					}
-					if (current_level == 6 && curr_room == (12 || 17))
+					if (current_level == 6 && pick_room == 12)
 					{
 						snprintf(hint, sizeof(hint),
 							"HINT:\n"
@@ -1897,7 +1898,29 @@ void __pascal far proc_get_object() { // CustomLogic
 						show_dialog(hint);
 					}
 				}
-				else if (current_level == 10 && curr_room == 7)
+				else if (current_level == 1 && pick_room == 6)
+				{
+					snprintf(hint, sizeof(hint),
+						"HINT:\n"
+						"Slide from proper distance and you will be able to grab the ledge below.");
+					show_dialog(hint);
+				}
+				else if (current_level == 1 && Char.room == 8)
+				{
+					snprintf(hint, sizeof(hint),
+						"HINT:\n"
+						"Redraw the sword at proper position and strike. Yes, the guard can be killed.");
+					show_dialog(hint);
+				}
+				else if (current_level == 13 && Char.room == 13)
+				{
+				snprintf(hint, sizeof(hint),
+					"HINT:\n"
+					"With hard work and effort, you can achieve anything.\n"
+					"- Antoine Griezmann");
+				show_dialog(hint);
+				}
+				else if (current_level == 10 && pick_room == 7)
 				{
 					show_TraderDialogBox();
 				}
@@ -1926,7 +1949,7 @@ void __pascal far proc_get_object() { // CustomLogic
 						Char.x = 30;
 					}
 				}
-				else if (current_level == 8 && curr_room == 2)
+				else if (current_level == 8 && pick_room == 2)
 				{
 					if (get_tile(2, 3, 2) != tiles_10_potion)
 					{
@@ -1943,7 +1966,7 @@ void __pascal far proc_get_object() { // CustomLogic
 					play_sound(sound_28_death_in_fight);
 					game_is_rewinding = true;
 				}
-				else if (current_level == 12 && curr_room == 3)
+				else if (current_level == 12 && pick_room == 3)
 				{
 				char hint[140];
 				snprintf(hint, sizeof(hint),
@@ -1972,7 +1995,7 @@ void __pascal far proc_get_object() { // CustomLogic
 				get_tile(4, 7, 0);
 				trigger_button(0, 0, -1);
 				}
-				else if (current_level == 12 && curr_room == 16)
+				else if (current_level == 12 && pick_room == 16)
 				{
 					stop_sounds();
 					play_sound(sound_25_presentation);
@@ -2005,7 +2028,7 @@ void __pascal far proc_get_object() { // CustomLogic
 						flash_color = color_9_brightblue;
 						flash_time = 2;
 					}
-					else if (current_level == 7 && curr_room == 4)
+					else if (current_level == 7 && pick_room == 4)
 					{
 						if (get_tile(4, 1, 1) != tiles_10_potion)
 						{
@@ -2020,7 +2043,7 @@ void __pascal far proc_get_object() { // CustomLogic
 							need_full_redraw = 1;
 						}
 					}
-					else if (current_level == 10 && curr_room == (1 || 8))
+					else if (current_level == 10 && pick_room == (1 || 8))
 					{
 						char hint[140];
 						snprintf(hint, sizeof(hint),
@@ -2035,7 +2058,7 @@ void __pascal far proc_get_object() { // CustomLogic
 						get_tile(8, 0, 0);
 						trigger_button(0, 0, -1);
 					}
-					else if (current_level == 10 && curr_room == 7)
+					else if (current_level == 10 && pick_room == 7)
 					{
 						int total_cash = 0;
 						for (int i = 0; i <= current_level; i++) {

@@ -642,9 +642,10 @@ void __pascal far draw_tile_anim() {
 					else if ((current_level == 3 && (curr_room == 12 || curr_room == 22)) ||
 						(current_level == 6 && (curr_room == 19 || curr_room == 12)) ||
 						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 1 || curr_room == 7)) || 
-						(current_level == 8 && curr_room == 2) || (current_level == 10 && curr_room == 7))
+						(current_level == 8 && curr_room == 2) || (current_level == 10 && curr_room == 7) || (current_level == 1 && (curr_room == 6 || curr_room == 8))
+						|| (current_level == 13 && curr_room == 13))
 					{
-						color = 11;
+						color = 11; // Hint Potion
 					}
 					else if (current_level == 4)
 					{
