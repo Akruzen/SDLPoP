@@ -35,7 +35,7 @@ void __pascal far seqtbl_offset_opp(int seq_index) {
 
 // seg005:0030
 void __pascal far do_fall() {
-	if (is_screaming == 0 && Char.fall_y >= 43) {
+	if (is_screaming == 0 && Char.fall_y >= 31) {
 		play_sound(sound_1_falling); // falling
 		is_screaming = 1;
 	}
@@ -177,7 +177,8 @@ void __pascal far land() {
 					play_sound(sound_17_soft_land); // soft land (crouch)
 					is_guard_notice = 1;
 				}
-			} else if (Char.fall_y < 33) {
+			}
+			else if (Char.fall_y < 33) {
 				// fell 2 rows
 				if (Char.charid == charid_1_shadow) goto loc_5EFD;
 				if (Char.charid >= charid_2_guard || Char.sword == sword_2_drawn) // goto loc_5F6C;
@@ -187,20 +188,19 @@ void __pascal far land() {
 					seq_id = seq_77_guard_stand_inactive;
 				}
 				// kid (or skeleton (bug!))
-				else if (! take_hp(1)) {
+				else if (!take_hp(1)) {
 					// still alive
 					play_sound(sound_16_medium_land); // medium land
 					is_guard_notice = 1;
 					seq_id = seq_20_medium_land; // medium land (lose 1 HP, crouch)
-				} else {
+				}
+				else {
 					// dead (this was the last HP)
 					goto loc_5F75;
 				}
-			} else {
+			}
+			else {
 				// fell 3 or more rows
-				stop_sounds();
-				play_sound(sound_1_falling); // falling
-		        is_screaming = 1;
 				goto loc_5F6C;
 			}
 		}

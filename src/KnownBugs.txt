@@ -1,0 +1,3 @@
+5. Friendly Guard can fall through wall in level 8 in manual controls. (found a alternate way)
+6. Wasted text is missing sometimes when prince dies.
+7. First few Frames missing from embrace cutscene.

@@ -505,8 +505,8 @@ void __pascal far check_gate_push() {
 			// custom logic - push kid to the left of the gate when turning around with sword
 			if (Char.sword == sword_2_drawn &&
 				Char.direction == dir_0_right &&
-				Opp.alive < 0 &&
-				Opp.sword == sword_2_drawn &&
+				/*Opp.alive < 0 &&
+				Opp.sword == sword_2_drawn &&*/
 				tile_col == orig_col) {
 				Char.x += 10;
 				return;

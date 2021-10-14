@@ -588,7 +588,7 @@ int __pascal far process_key() {
 				is_menu_shown = 1;
 			}
 		break;
-		case SDL_SCANCODE_BACKSPACE:
+		case SDL_SCANCODE_B:
 			if (!is_cutscene && !is_ending_sequence) {
 				is_paused = 1;
 				is_menu_shown = 1;

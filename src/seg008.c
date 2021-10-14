@@ -639,10 +639,10 @@ void __pascal far draw_tile_anim() {
 					{
 						color = 14;
 					}
-					else if ((current_level == 3 && (curr_room == 12 || curr_room == 22)) ||
+					else if ((current_level == 3 && (curr_room == 12 || curr_room == 22 || curr_room == 8)) ||
 						(current_level == 6 && (curr_room == 19 || curr_room == 12)) ||
 						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 1 || curr_room == 7)) || 
-						(current_level == 8 && curr_room == 2) || (current_level == 10 && curr_room == 7) || (current_level == 1 && (curr_room == 6 || curr_room == 8))
+						(current_level == 8 && curr_room == 2) || (current_level == 10 && curr_room == 7) || (current_level == 1 && (curr_room == 6 || curr_room == 8 || curr_room == 14))
 						|| (current_level == 13 && curr_room == 13))
 					{
 						color = 11; // Hint Potion
@@ -1982,6 +1982,11 @@ void __pascal far show_level() {
 				break;
 			case 12:
 				display_text_bottom("12: NOW YOU SEE ME");
+				enable_lighting = 0;
+				need_full_redraw = 1;
+				break;
+			case 13:
+				display_text_bottom("13: THE FINAL FIGHT");
 				enable_lighting = 0;
 				need_full_redraw = 1;
 				break;

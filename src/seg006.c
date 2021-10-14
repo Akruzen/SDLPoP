@@ -1717,6 +1717,14 @@ void __pascal far proc_get_object() { // CustomLogic
 				"- by Amy I. Long");
 			show_dialog(hint);
 		}
+		else if (current_level == 1)
+		{
+			char hint[140];
+			snprintf(hint, sizeof(hint),
+				"INSTRUCTIONS:\n"
+				"Press ctrl key to take out your sword when you want.");
+			show_dialog(hint);
+		}
 		else
 		{
 			have_sword = -1;
@@ -1828,7 +1836,7 @@ void __pascal far proc_get_object() { // CustomLogic
 				}
 				else if ((current_level == 3 && (pick_room == 12 || pick_room == 22)) ||
 						(current_level == 6 && (pick_room == 19 || pick_room == 12)) ||
-						(current_level == 5 && pick_room == 6) || (current_level == 7 && (pick_room == 4 || pick_room == 7 || pick_room == 1)) ||
+						(current_level == 5 && (pick_room == 6 || pick_room == 8)) || (current_level == 7 && (pick_room == 4 || pick_room == 7 || pick_room == 1)) ||
 						current_level == 8 && pick_room == 2)
 				{
 					switch (pick_room)
@@ -1849,6 +1857,7 @@ void __pascal far proc_get_object() { // CustomLogic
 								"Drinking grey potions near moving tiles will cause them to stop.\n"
 								"Match your timings accordingly.");
 							break;
+						case 8:
 						case 6:
 							snprintf(hint, sizeof(hint),
 								"HINT:\n"
@@ -1909,7 +1918,7 @@ void __pascal far proc_get_object() { // CustomLogic
 				{
 					snprintf(hint, sizeof(hint),
 						"HINT:\n"
-						"Redraw the sword at proper position and strike. Yes, the guard can be killed.");
+						"Redraw the sword at proper position and strike. Kill the guard on the button.");
 					show_dialog(hint);
 				}
 				else if (current_level == 13 && Char.room == 13)
@@ -1918,6 +1927,20 @@ void __pascal far proc_get_object() { // CustomLogic
 					"HINT:\n"
 					"With hard work and effort, you can achieve anything.\n"
 					"- Antoine Griezmann");
+				show_dialog(hint);
+				}
+				else if (current_level == 1 && Char.room == 14)
+				{
+				snprintf(hint, sizeof(hint),
+					"HINT: "
+					"Move one step away from the loose tiles, and then slide jump at proper time to make both tiles fall.");
+				show_dialog(hint);
+				}
+				else if (current_level == 3 && Char.room == 8)
+				{
+				snprintf(hint, sizeof(hint),
+					"HINT: "
+					"Making skeletons stand on buttons are excellent ways to keep gates open.");
 				show_dialog(hint);
 				}
 				else if (current_level == 10 && pick_room == 7)
@@ -2433,6 +2456,7 @@ int __pascal far is_dead() {
 void __pascal far play_death_music() {
 	word sound_id;
 	if (Guard.charid == charid_1_shadow) {
+		wasted_timer = 24;
 		sound_id = sound_24_death_regular; // killed by shadow
 	} 
 	else if (holding_sword) {
@@ -2466,6 +2490,18 @@ void __pascal far on_guard_killed() {
 		play_sound(sound_37_victory); // Guard's death
 	}
 	// CustomLogic
+	if (current_level == 1 && curr_room == 8)
+	{
+		char hint[140];
+		snprintf(hint, sizeof(hint),
+			"INSTRUCTIONS:\n"
+			"Collect money by killing guards. Collect enough money to exchange cash for stuff later.");
+		show_dialog(hint);
+		snprintf(hint, sizeof(hint),
+			"INSTRUCTIONS:\n"
+			"Note that making guards fall off screen won't fetch you money. Press M to know your balance.");
+		show_dialog(hint);
+	}
 	if (current_level == 4)
 	{
 		switch (curr_room)

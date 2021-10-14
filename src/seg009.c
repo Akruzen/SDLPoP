@@ -3082,7 +3082,8 @@ void process_events() {
 				int scancode = event.key.keysym.scancode;
 
 				// Handle these separately, so they won't interrupt things that are usually interrupted by a keypress. (pause, cutscene)
-				if (scancode == SDL_SCANCODE_GRAVE) {
+				if (scancode == SDL_SCANCODE_GRAVE && cheats_enabled) {
+					// CustomLogic - Game can fast forward only when cheats are ON
 					init_timer(60 * 10); // fast-forward on
 					break;
 				}
@@ -3097,7 +3098,7 @@ void process_events() {
 #endif
 #ifdef USE_MENU
 				if (escape_key_suppressed &&
-						(scancode == SDL_SCANCODE_BACKSPACE || (enable_pause_menu && scancode == SDL_SCANCODE_ESCAPE))
+						(scancode == SDL_SCANCODE_B || (enable_pause_menu && scancode == SDL_SCANCODE_ESCAPE))
 				) {
 					break; // Prevent repeated keystrokes opening/closing the menu as long as the key is held down.
 				} else
@@ -3186,7 +3187,7 @@ void process_events() {
 				key_states[event.key.keysym.scancode] = 0;
 #ifdef USE_MENU
 				// Prevent repeated keystrokes opening/closing the menu as long as the key is held down.
-				if (event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+				if (event.key.keysym.scancode == SDL_SCANCODE_B || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
 					escape_key_suppressed = false;
 				}
 #endif
@@ -3225,7 +3226,7 @@ void process_events() {
 					case SDL_CONTROLLER_BUTTON_START:
 					case SDL_CONTROLLER_BUTTON_BACK:
 #ifdef USE_MENU
-						last_key_scancode = SDL_SCANCODE_BACKSPACE;  /*** bring up pause menu ***/
+						last_key_scancode = SDL_SCANCODE_B;  /*** bring up pause menu ***/
 #else
 						last_key_scancode = SDL_SCANCODE_ESCAPE;  /*** back (pause game) ***/
 #endif
@@ -3342,7 +3343,7 @@ void process_events() {
 				switch(event.button.button) {
 					case SDL_BUTTON_LEFT:
 						if (!is_menu_shown) {
-							last_key_scancode = SDL_SCANCODE_BACKSPACE;
+							last_key_scancode = SDL_SCANCODE_B;
 						} else {
 							mouse_clicked = true;
 						}

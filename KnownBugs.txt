@@ -1,7 +1,0 @@
-1. Prince does not scream when falling.
-2. Prince can pass through closed gates when sword is drawn from left to right.
-3. Guards do not become inactive when prince leaves their sight.
-4. Chompers sometimes make continuous sounds in treadmill function.
-5. Friendly Guard can fall through wall in level 8 in manual controls.
-6. Wasted text is missing sometimes when prince dies.
-7. First few Frames missing from embrace cutscene.
