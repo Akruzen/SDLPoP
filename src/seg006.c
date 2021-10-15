@@ -1724,6 +1724,10 @@ void __pascal far proc_get_object() { // CustomLogic
 				"INSTRUCTIONS:\n"
 				"Press ctrl key to take out your sword when you want.");
 			show_dialog(hint);
+			have_sword = -1;
+			play_sound(sound_37_victory); // get sword
+			flash_color = color_14_brightyellow;
+			flash_time = 8;
 		}
 		else
 		{

@@ -394,6 +394,14 @@ int __pascal far play_level_2() {
 			cash_array[current_level] = 0;
 			panic_potion_timer = 0;
 			kid_is_visible = true;
+			if (current_level == 3)
+			{
+				enable_lighting = true;
+			}
+			else
+			{
+				enable_lighting = false;
+			}
 			if (current_level == 11)
 			{
 				room_getter = 2;
@@ -429,6 +437,14 @@ int __pascal far play_level_2() {
 				// CustomLogic
 				if (next_level == 11) {
 					mario_timer = 48;
+				}
+				if (next_level == 3)
+				{
+					enable_lighting = true;
+				}
+				else
+				{
+					enable_lighting = false;
 				}
 
 				#ifdef USE_REPLAY
