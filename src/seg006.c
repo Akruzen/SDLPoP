@@ -1689,7 +1689,7 @@ void __pascal far set_objtile_at_char() {
 
 // seg006:1463
 void __pascal far proc_get_object() { // CustomLogic
-	int pick_room = curr_room;
+	int pick_room = Char.room;
 	if (Char.charid != charid_0_kid) return;
 	if (pickup_obj_type == -1)
 	{
@@ -1947,13 +1947,34 @@ void __pascal far proc_get_object() { // CustomLogic
 					"Making skeletons stand on buttons are excellent ways to keep gates open.");
 				show_dialog(hint);
 				}
+				else if (current_level == 6 && Char.room == 14)
+				{
+				snprintf(hint, sizeof(hint),
+					"HINT: "
+					"Keep this button pressed all the time. I wonder who has to die here :)");
+				show_dialog(hint);
+				}
+				else if (current_level == 8 && Char.room == 13)
+				{
+				snprintf(hint, sizeof(hint),
+					"HINT: "
+					"Sometimes, single button opens multiple gates.");
+				show_dialog(hint);
+				}
+				else if (current_level == 9 && Char.room == 14)
+				{
+				snprintf(hint, sizeof(hint),
+					"HINT: "
+					"I sometimes wonder what is there beyond the gap on the left.");
+				show_dialog(hint);
+				}
 				else if (current_level == 10 && pick_room == 7)
 				{
 					show_TraderDialogBox();
 				}
 				else if (current_level == 4)
 				{
-					if (curr_room == 6 || curr_room == 10 || curr_room == 7)
+					if (Char.room == 6 || Char.room == 10 || Char.room == 7)
 					{
 						flash_color = color_13_brightmagenta;
 						flash_time = 8;
@@ -2003,17 +2024,17 @@ void __pascal far proc_get_object() { // CustomLogic
 					" This made him invisible to everyone except his royal defences, guards and Jaffar himself.");
 				show_dialog(hint);
 				snprintf(hint, sizeof(hint),
-					"Fortunately, Prince had two panic potions given to him by a wise old man back when he was in the prison.");
+					"Fortunately, Prince had 3 panic potions given to him by a wise old man back when he was in the prison.");
 				show_dialog(hint);
 				snprintf(hint, sizeof(hint),
 					"Soon, he discovers that they make him visible again for a few seconds.\n");
 				show_dialog(hint);
 				snprintf(hint, sizeof(hint),
-					"You have 2 Panic Potions. Press E to drink them. Use them wisely.");
+					"You have 3 Panic Potions. Press E to drink them. Use them wisely.");
 				show_dialog(hint);
 				play_sound(sound_25_presentation);
 				panic_potion_drinkable = true;
-				panic_potion_count = 2;
+				panic_potion_count = 3;
 				display_text_bottom("NOW YOU DON'T");
 				text_time_remaining = 24;
 				text_time_total = 24;
@@ -2494,7 +2515,7 @@ void __pascal far on_guard_killed() {
 		play_sound(sound_37_victory); // Guard's death
 	}
 	// CustomLogic
-	if (current_level == 1 && curr_room == 8)
+	if (current_level == 1 && Char.room == 8)
 	{
 		char hint[140];
 		snprintf(hint, sizeof(hint),
@@ -2508,7 +2529,7 @@ void __pascal far on_guard_killed() {
 	}
 	if (current_level == 4)
 	{
-		switch (curr_room)
+		switch (Char.room)
 		{
 			case 5:
 				get_tile(8, 2, 2);

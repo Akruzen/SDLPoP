@@ -635,15 +635,15 @@ void __pascal far draw_tile_anim() {
 					break;
 				case 3: // slow fall
 				case 4: // upside down
-					if (current_level == 3 && (curr_room == 6 || curr_room == 4))
+					if (current_level == 3 && (Char.room == 6 || Char.room == 4))
 					{
 						color = 14;
 					}
-					else if ((current_level == 3 && (curr_room == 12 || curr_room == 22 || curr_room == 8)) ||
-						(current_level == 6 && (curr_room == 19 || curr_room == 12)) ||
-						(current_level == 5 && curr_room == 6) || (current_level == 7 && (curr_room == 4 || curr_room == 1 || curr_room == 7)) || 
-						(current_level == 8 && curr_room == 2) || (current_level == 10 && curr_room == 7) || (current_level == 1 && (curr_room == 6 || curr_room == 8 || curr_room == 14))
-						|| (current_level == 13 && curr_room == 13))
+					else if ((current_level == 3 && (Char.room == 12 || Char.room == 22 || Char.room == 8)) ||
+						(current_level == 6 && (Char.room == 19 || Char.room == 12 || Char.room == 14)) ||
+						(current_level == 5 && Char.room == 6) || (current_level == 7 && (Char.room == 4 || Char.room == 1 || Char.room == 7)) ||
+						(current_level == 8 && (Char.room == 2 && Char.room == 13)) || (current_level == 10 && Char.room == 7) || (current_level == 1 && (Char.room == 6 || Char.room == 8 || Char.room == 14))
+						|| (current_level == 13 && Char.room == 13) || (current_level == 9 && Char.room == 14))
 					{
 						color = 11; // Hint Potion
 					}
@@ -655,7 +655,7 @@ void __pascal far draw_tile_anim() {
 					{
 						color = 8;
 					}
-					else if (current_level == 9 && curr_room == 11)
+					else if (current_level == 9 && Char.room == 11)
 					{
 						if (potion_animate)
 						{
@@ -668,7 +668,7 @@ void __pascal far draw_tile_anim() {
 							potion_animate = true;
 						}
 					}
-					else if (current_level == 12 && (curr_room == 3 || curr_room == 16))
+					else if (current_level == 12 && (Char.room == 3 || Char.room == 16))
 					{
 						if (potion_animate)
 						{
@@ -688,11 +688,11 @@ void __pascal far draw_tile_anim() {
 					}
 					if (current_level == 6)
 					{
-						if (curr_room == 24)
+						if (Char.room == 24)
 							move_spike_tile(24, 8, 6);
-						if (curr_room == 5)
+						if (Char.room == 5)
 							move_spike_tile(5, 9, 3);
-						if (curr_room == 6)
+						if (Char.room == 6)
 							move_spike_tile(6, 8, 3);
 					}
 				case 2: // life
@@ -1947,6 +1947,7 @@ void __pascal far show_level() {
 				need_full_redraw = 1;
 				break;
 			case 5:
+				display_text_bottom("5: THE TREADMILL");
 				enable_lighting = 0;
 				need_full_redraw = 1;
 				break;

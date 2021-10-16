@@ -361,6 +361,7 @@ int quick_process(process_func_type process_func) {
 	process(panic_button_pressed);
 	process(jaffar_revive_timer);
 	process(jaffar_kill_counter);
+	process(wait_music_timer);
 	process(enable_lighting);
 	process(is_blind_mode);
 	process(enable_music);
