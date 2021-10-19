@@ -1917,6 +1917,10 @@ void __pascal far proc_get_object() { // CustomLogic
 						"HINT:\n"
 						"Slide from proper distance and you will be able to grab the ledge below.");
 					show_dialog(hint);
+					snprintf(hint, sizeof(hint),
+						"HINT:\n"
+						"Or, just jump from right and grab the ledge below.");
+					show_dialog(hint);
 				}
 				else if (current_level == 1 && Char.room == 8)
 				{
@@ -2112,10 +2116,10 @@ void __pascal far proc_get_object() { // CustomLogic
 						for (int i = 0; i <= current_level; i++) {
 							total_cash += cash_array[i];
 						}
-						if ((cash_obtained + total_cash) >= 400) {
-							cash_obtained -= 400;
+						if ((cash_obtained + total_cash) >= 300) {
+							cash_obtained -= 300;
 							showing_cash = true;
-							display_text_bottom("SPENT $400");
+							display_text_bottom("SPENT $300");
 							text_time_remaining = 24;
 							text_time_total = 24;
 							showing_cash = false;
@@ -2148,14 +2152,14 @@ void show_TraderDialogBox()
 	char hint[140];
 	snprintf(hint, sizeof(hint),
 		"TRADER:\n"
-		"For $400, I can give you weightless potion effect.");
+		"For $300, I can give you weightless potion effect.");
 	show_dialog(hint);
 	snprintf(hint, sizeof(hint),
 		"TRADER:\n"
 		"This way, you will be able to make this jump.");
 	show_dialog(hint);
 	snprintf(hint, sizeof(hint),
-		"Do you wish to trade slow fall effect for $400? If yes, drink the blue potion.");
+		"Do you wish to trade slow fall effect for $300? If yes, drink the blue potion.");
 	show_dialog(hint);
 }
 
