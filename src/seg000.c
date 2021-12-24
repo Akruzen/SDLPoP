@@ -486,10 +486,17 @@ void check_quick_op() {
 	if (!enable_quicksave) return;
 	if (need_quick_save) {
 		// CustomLogic - Quicksave not allowed in rewind room
-		if ((!is_feather_fall && quick_save()) || ((current_level != 9) && curr_room != 11)) {
+		if (current_level == 9 && curr_room == 11) {
+			display_text_bottom("NO QUICKSAVE here");
+		}
+		else if (is_feather_fall) {
+			display_text_bottom("NO QUICKSAVE now");
+		}
+		else if (quick_save()) {
 			display_text_bottom("QUICKSAVE");
-		} else {
-			display_text_bottom("NO QUICKSAVE");
+		}
+		else {
+			display_text_bottom("QUICKSAVE FAILED");
 		}
 		need_quick_save = 0;
 		text_time_total = 24;

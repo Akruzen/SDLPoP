@@ -2063,6 +2063,17 @@ void __pascal far proc_get_object() { // CustomLogic
 				}
 			break;
 			case 5: // open
+				if (current_level == 3) {
+					char hint[140];
+					snprintf(hint, sizeof(hint),
+						"BUG:\n"
+						"Sometimes torch shadows get auto-disabled. Please enable them if they are off.");
+					show_dialog(hint);
+					snprintf(hint, sizeof(hint),
+						"INSTRUCTIONS:\n"
+						"Press B, go to settings, then visuals, turn the torch shadows off and again on.");
+					show_dialog(hint);
+				}
 				get_tile(8, 0, 0);
 				trigger_button(0, 0, -1);
 			break;

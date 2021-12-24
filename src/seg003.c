@@ -169,6 +169,7 @@ void __pascal far do_startpos() {
 		get_tile(5, 2, 0);
 		trigger_button(0, 0, -1);
 		seqtbl_offset_char(seq_7_fall); // fall
+	
 		if (cheats_enabled)
 		{
 			char hint[140];
